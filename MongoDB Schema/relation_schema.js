@@ -7,11 +7,11 @@ const relation_schema = new mongoose.Schema({
     ref: "Category",
     required: true,
   },
-  item: {
+  items: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "Items",
     required: true,
-  },
+  }],
   createdAt: {
     type: Date,
     default: Date.now,

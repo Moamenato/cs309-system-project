@@ -5,6 +5,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const userRoutes = require("./APIs/user_api");
 const itemRoutes = require("./APIs/item_api");
+const categoryRoutes = require("./APIs/category_api");
+const relationRoutes = require("./APIs/relation_api");
 
 const app = express();
 app.use(cors());
@@ -25,3 +27,5 @@ mongoose
 
 app.use("/users", userRoutes);
 app.use("/items", itemRoutes);
+app.use("/categories", categoryRoutes);
+app.use("/relations", relationRoutes);

@@ -91,4 +91,30 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+// Search for an item by title
+router.post("/search/title", async (req, res) => {
+  try {
+    const title = req.body.title;
+    if (!title) {
+      return res
+        .status(400)
+        .json({ error: "Title query parameter is required" });
+    }
+
+    const allItems = await Items.find();
+    const filteredItems = allItems
+      .filter((item) => {
+        return item.title.toLowerCase().includes(title.toLowerCase());
+      })
+      .slice(0, 4);
+
+    res.status(200).json(filteredItems);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 module.exports = router;
+
+// use tags in search title
