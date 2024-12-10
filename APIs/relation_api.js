@@ -1,145 +1,131 @@
 const express = require("express");
-const CategoryItemRelation = require("../MongoDB Schema/relation_schema.js");
-const Category = require("../MongoDB Schema/category_schema.js");
-const Item = require("../MongoDB Schema/item_schema.js");
+const CategoryItemRelation = require("../MongoDB Schema/relation_schema.js"); 
 const router = express.Router();
 
-
-// Create a new category-item relation and push the item to the category
-router.post("/add", async (req, res) => {
+router.post("/", async (req, res) => {
   try {
-    const { categoryId, itemId } = req.body;
+    const { category, item } = req.body;
 
-    const category = await Category.findById(categoryId);
-    const item = await Item.findById(itemId);
     if (!category || !item) {
-      return res.status(404).json({ error: "Category or item not found" });
+      return res.status(400).json({ message: "Category and item are required" });
     }
-
-    const existingRelation = await CategoryItemRelation.findOne({
-      category: categoryId,
-    });
-
+    const existingRelation = await CategoryItemRelation.findOne({ category });
     if (existingRelation) {
-      if (!existingRelation.items.includes(itemId)) {
-        existingRelation.items.push(itemId);
-        await existingRelation.save();
-        return res.status(200).json({
-          message: "Item added to existing category-item relation",
-          relation: existingRelation,
-        });
-      }
-      return res.status(400).json({
-        message: "This item is already linked to the category.",
-      });
+      return res.status(400).json({ message: "Relation with this category already exists" });
     }
 
     const newRelation = new CategoryItemRelation({
-      category: categoryId,
-      items: [itemId],
+      category,
+      items: [item], // Only one item added here
     });
-
-    await newRelation.save();
-
-    res.status(201).json({
-      message: "Category-item relation created successfully",
-      relation: newRelation,
-    });
+    const savedRelation = await newRelation.save();
+    res
+      .status(201)
+      .json({ message: "Relation created successfully", relation: savedRelation });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(400).json({ message: "Error creating relation", error: error.message });
   }
 });
 
 // Get all relations
 router.get("/", async (req, res) => {
   try {
-    const relations = await CategoryItemRelation.find().populate(
-      "category items"
-    );
+    const relations = await CategoryItemRelation.find()
+      .populate("category")
+      .populate("items");
     res.status(200).json(relations);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ message: "Error fetching relations", error: error.message });
   }
 });
 
 // Get a single relation by ID
 router.get("/:id", async (req, res) => {
   try {
-    const relation = await CategoryItemRelation.findById(
-      req.params.id
-    ).populate("category items");
+    const relation = await CategoryItemRelation.findById(req.params.id)
+      .populate("category")
+      .populate("items");
+
     if (!relation) {
-      return res.status(404).json({ error: "Relation not found" });
+      return res.status(404).json({ message: "Relation not found" });
     }
+
     res.status(200).json(relation);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ message: "Error fetching relation", error: error.message });
   }
 });
 
-// Update a category-item relation (e.g., add/remove items)
+// Add a single item to an existing relation by ID
 router.put("/:id", async (req, res) => {
   try {
-    const { itemIds } = req.body; // itemIds is an array of item ObjectIds
+    const { item } = req.body;
 
-    // Check if the relation exists
+    if (!item) {
+      return res.status(400).json({ message: "Item is required" });
+    }
+
     const relation = await CategoryItemRelation.findById(req.params.id);
+
     if (!relation) {
-      return res.status(404).json({ error: "Relation not found" });
+      return res.status(404).json({ message: "Relation not found" });
     }
 
-    // Check if all items exist
-    const items = await Item.find({ _id: { $in: itemIds } });
-    if (items.length !== itemIds.length) {
-      return res.status(400).json({ error: "Some items do not exist" });
+    if (relation.items.includes(item)) {
+      return res.status(400).json({ message: "Item already exists in the relation" });
     }
 
-    // Update the items in the relation
-    relation.items = itemIds;
-    await relation.save();
-
-    // Update the category's items array
-    const category = await Category.findById(relation.category);
-    category.items = itemIds;
-    await category.save();
-
-    res.status(200).json({
-      message: "Category-item relation updated successfully",
-      relation,
-    });
+    relation.items.push(item);
+    const updatedRelation = await relation.save();
+    res
+      .status(200)
+      .json({ message: "Item added to relation successfully", relation: updatedRelation });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(400).json({ message: "Error adding item to relation", error: error.message });
   }
 });
 
-// Delete a category-item relation and remove the item from the category's items array
-router.delete("/:id", async (req, res) => {
+// Delete a single item from an existing relation by ID
+router.delete("/:relationId/item/:itemId", async (req, res) => {
   try {
-    const relation = await CategoryItemRelation.findById(req.params.id);
+    const { relationId, itemId } = req.params;
+
+    const relation = await CategoryItemRelation.findById(relationId);
+
     if (!relation) {
-      return res.status(404).json({ error: "Relation not found" });
+      return res.status(404).json({ message: "Relation not found" });
     }
 
-    // Delete the relation
-    await relation.remove();
+    const itemIndex = relation.items.indexOf(itemId);
+    if (itemIndex === -1) {
+      return res.status(404).json({ message: "Item not found in the relation" });
+    }
 
-    // Remove the item from the category's items array
-    const category = await Category.findById(relation.category);
-    category.items = category.items.filter(
-      (item) => !relation.items.includes(item)
-    );
-    await category.save();
+    relation.items.splice(itemIndex, 1);
+    const updatedRelation = await relation.save();
 
-    res.status(200).json({
-      message: "Category-item relation deleted successfully",
-    });
+    res
+      .status(200)
+      .json({ message: "Item removed from relation successfully", relation: updatedRelation });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ message: "Error removing item from relation", error: error.message });
+  }
+});
+
+// Delete a relation by ID
+router.delete("/:id", async (req, res) => {
+  try {
+    const deletedRelation = await CategoryItemRelation.findByIdAndDelete(req.params.id);
+
+    if (!deletedRelation) {
+      return res.status(404).json({ message: "Relation not found" });
+    }
+
+    res
+      .status(200)
+      .json({ message: "Relation deleted successfully", relation: deletedRelation });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting relation", error: error.message });
   }
 });
 
