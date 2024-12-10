@@ -7,7 +7,9 @@ const userRoutes = require("./APIs/user_api");
 const itemRoutes = require("./APIs/item_api");
 const categoryRoutes = require("./APIs/category_api");
 const relationRoutes = require("./APIs/relation_api");
-
+const feedbackRoutes = require("./APIs/feedback_api");
+const cartRoutes = require('./APIs/cart_api')
+const orderRoutes = require('./APIs/order_api')
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -29,3 +31,6 @@ app.use("/users", userRoutes);
 app.use("/items", itemRoutes);
 app.use("/categories", categoryRoutes);
 app.use("/relations", relationRoutes);
+app.use("/feedback", feedbackRoutes);
+app.use("/cart", cartRoutes)
+app.use("/orders", orderRoutes)
