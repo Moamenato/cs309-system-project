@@ -1,0 +1,30 @@
+.nav-bar {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  width: 100%;
+  transition: top 0.3s ease;
+  background-color: black;
+}
+
+.nav-bar .container {
+  height: 43px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+a {
+  color: white;
+}
+/* Sticky behavior */
+.nav-bar.sticky {
+  position: sticky;
+  z-index: 1000;
+  top: 0;
+}
+
+@media (max-width: 768px) {
+  .nav-bar {
+    display: none;
+  }
+}
