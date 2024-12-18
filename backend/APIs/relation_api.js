@@ -2,6 +2,7 @@ const express = require("express");
 const CategoryItemRelation = require("../MongoDB Schema/relation_schema.js"); 
 const router = express.Router();
 
+// Create a new relation
 router.post("/", async (req, res) => {
   try {
     const { category, item } = req.body;
@@ -42,7 +43,7 @@ router.get("/", async (req, res) => {
 // Get a single relation by ID
 router.get("/:id", async (req, res) => {
   try {
-    const relation = await CategoryItemRelation.findById(req.params.id)
+    const relation = await CategoryItemRelation.find({category: req.params.id})
       .populate("category")
       .populate("items");
 

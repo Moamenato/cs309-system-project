@@ -28,7 +28,7 @@ mongoose
   });
 
 app.use("/users", userRoutes);
-app.use("/items", itemRoutes);
+app.use("/products", itemRoutes);
 app.use("/categories", categoryRoutes);
 app.use("/relations", relationRoutes);
 app.use("/feedback", feedbackRoutes);

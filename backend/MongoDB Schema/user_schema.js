@@ -13,6 +13,7 @@ const user_schema = new mongoose.Schema(
     },
     phone_number: { type: String },
     password: { type: String, required: true },
+    isAdmin: { type: Boolean, required: true }
   },
   { timestamps: true }
 );

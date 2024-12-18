@@ -105,8 +105,7 @@ router.post("/search/title", async (req, res) => {
     const filteredItems = allItems
       .filter((item) => {
         return item.title.toLowerCase().includes(title.toLowerCase());
-      })
-      .slice(0, 4);
+      });
 
     res.status(200).json(filteredItems);
   } catch (error) {
@@ -118,3 +117,4 @@ router.post("/search/title", async (req, res) => {
 module.exports = router;
 
 // use tags in search title
+// 
