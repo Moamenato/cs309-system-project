@@ -10,6 +10,8 @@ const relationRoutes = require("./APIs/relation_api");
 const feedbackRoutes = require("./APIs/feedback_api");
 const cartRoutes = require('./APIs/cart_api')
 const orderRoutes = require('./APIs/order_api')
+const dotenv=require("dotenv");
+dotenv.config({path: "./config.env"});
 const app = express();
 app.use(cors());
 app.use(express.json());

@@ -1,8 +1,10 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const Users = require("../MongoDB Schema/user_schema.js");
+const jwt = require("jsonwebtoken");
 const router = express.Router();
 
+const createToken =(id)=> jwt.sign({id},process.env.JWT_SECRET,{expiresIn:process.env.JWT_EXPIRATION_TIME})
 // Create a new user
 router.post("/", async (req, res) => {
   try {
@@ -17,7 +19,8 @@ router.post("/", async (req, res) => {
 
     const newUser = new Users({ email, password: hashedPassword, ...rest });
     const savedUser = await newUser.save();
-    res.status(201).json({ message: "User created successfully", user: savedUser });
+    const token = createToken(savedUser._id);
+    res.status(201).json({ message: "User created successfully", user: savedUser,token });
   } catch (error) {
     res.status(400).json({ message: "Error creating user", error: error.message });
   }
@@ -26,6 +29,7 @@ router.post("/", async (req, res) => {
 // User Login
 router.post("/login", async (req, res) => {
   try {
+
     const { email, password } = req.body;
 
     const user = await Users.findOne({ email });
@@ -37,8 +41,8 @@ router.post("/login", async (req, res) => {
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
-
-    res.status(200).json({ message: "Login successful", user });
+    const token = createToken(user._id);
+    res.status(200).json({ message: "Login successful",user, token });
   } catch (error) {
     res.status(500).json({ message: "Error logging in", error: error.message });
   }
