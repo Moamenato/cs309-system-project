@@ -5,6 +5,9 @@ const router = express.Router();
 // Create a new relation
 router.post("/", async (req, res) => {
   try {
+    if(!req.user.isAdmin){
+      return res.status(403).json({message: "You are not an admin."});
+    }
     const { category, item } = req.body;
 
     if (!category || !item) {
@@ -60,6 +63,9 @@ router.get("/:id", async (req, res) => {
 // Add a single item to an existing relation by ID
 router.put("/:id", async (req, res) => {
   try {
+    if(!req.user.isAdmin){
+      return res.status(403).json({message: "You are not an admin."});
+    }
     const { item } = req.body;
 
     if (!item) {
@@ -89,6 +95,9 @@ router.put("/:id", async (req, res) => {
 // Delete a single item from an existing relation by ID
 router.delete("/:relationId/item/:itemId", async (req, res) => {
   try {
+    if(!req.user.isAdmin){
+      return res.status(403).json({message: "You are not an admin."});
+    }
     const { relationId, itemId } = req.params;
 
     const relation = await CategoryItemRelation.findById(relationId);
@@ -116,6 +125,9 @@ router.delete("/:relationId/item/:itemId", async (req, res) => {
 // Delete a relation by ID
 router.delete("/:id", async (req, res) => {
   try {
+    if(!req.user.isAdmin){
+      return res.status(403).json({message: "You are not an admin."});
+    }
     const deletedRelation = await CategoryItemRelation.findByIdAndDelete(req.params.id);
 
     if (!deletedRelation) {

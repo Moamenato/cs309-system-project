@@ -4,49 +4,8 @@ const Users = require("../MongoDB Schema/user_schema.js");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
 
-const createToken =(id)=> jwt.sign({id},process.env.JWT_SECRET,{expiresIn:process.env.JWT_EXPIRATION_TIME})
-// Create a new user
-router.post("/", async (req, res) => {
-  try {
-    const { email, password, ...rest } = req.body;
+const createToken =(id)=> jwt.sign({id},process.env.JWT_SECRET,{expiresIn:process.env.JWT_EXPIRATION_TIME});
 
-    const existingUser = await Users.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: "Email is already in use" });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const newUser = new Users({ email, password: hashedPassword, ...rest });
-    const savedUser = await newUser.save();
-    const token = createToken(savedUser._id);
-    res.status(201).json({ message: "User created successfully", user: savedUser,token });
-  } catch (error) {
-    res.status(400).json({ message: "Error creating user", error: error.message });
-  }
-});
-
-// User Login
-router.post("/login", async (req, res) => {
-  try {
-
-    const { email, password } = req.body;
-
-    const user = await Users.findOne({ email });
-    if (!user) {
-      return res.status(401).json({ message: "Invalid email or password" });
-    }
-
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return res.status(401).json({ message: "Invalid email or password" });
-    }
-    const token = createToken(user._id);
-    res.status(200).json({ message: "Login successful",user, token });
-  } catch (error) {
-    res.status(500).json({ message: "Error logging in", error: error.message });
-  }
-});
 
 // Get all users
 router.get("/", async (req, res) => {
@@ -121,6 +80,9 @@ router.put("/:id", async (req, res) => {
 // Delete a user by ID
 router.delete("/:id", async (req, res) => {
   try {
+    if(!req.user.isAdmin){
+      return res.status(403).json({message: "You are not an admin."});
+    }
     const deletedUser = await Users.findByIdAndDelete(req.params.id);
     if (!deletedUser) {
       return res.status(404).json({ message: "User not found" });

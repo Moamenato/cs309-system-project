@@ -2,10 +2,14 @@
 const express = require("express");
 const Category = require("../MongoDB Schema/category_schema.js");
 const router = express.Router();
+const authRoutes = require('./auth_api');
 
 // create a new category
 router.post("/", async (req, res) => {
   try {
+    if(!req.user.isAdmin){
+      return res.status(403).json({message: "You are not an admin."});
+    }
     const { name, description } = req.body;
 
     const existingCategory = await Category.findOne({ name });
@@ -53,6 +57,9 @@ router.get("/:id", async (req, res) => {
 // update a category by ID
 router.put("/:id", async (req, res) => {
   try {
+    if(!req.user.isAdmin){
+      return res.status(403).json({message: "You are not an admin."});
+    }
     const { name, description } = req.body;
     const existingCategory = await Category.findOne({ name });
     if (existingCategory) {
@@ -80,6 +87,9 @@ router.put("/:id", async (req, res) => {
 
 // delete a category by ID
 router.delete("/:id", async (req, res) => {
+  if(!req.user.isAdmin){
+    return res.status(403).json({message: "You are not an admin."});
+  }
   try {
     const deletedCategory = await Category.findByIdAndDelete(req.params.id);
     if (!deletedCategory) {
