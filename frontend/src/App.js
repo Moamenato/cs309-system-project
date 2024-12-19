@@ -1,3 +1,4 @@
+import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 
@@ -9,12 +10,13 @@ import CartPage from "./Pages/CartPage";
 import ProfilePage from "./Pages/ProfilePage";
 import ContactUs from "./Pages/ContactUs";
 import Products from "./Pages/Products";
+import { AdminHomePage } from "./Pages/Admin/adminhomepage";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/*" element={<AdminHomePage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/cart" element={<CartPage />} />
