@@ -124,6 +124,3 @@ router.post("/search/title", async (req, res) => {
 });
 
 module.exports = router;
-
-// use tags in search title
-// 

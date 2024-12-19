@@ -4,8 +4,10 @@ const Users = require("../MongoDB Schema/user_schema.js");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
 
-const createToken =(id)=> jwt.sign({id},process.env.JWT_SECRET,{expiresIn:process.env.JWT_EXPIRATION_TIME});
-
+const createToken = (id) =>
+  jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRATION_TIME,
+  });
 
 // Get all users
 router.get("/", async (req, res) => {
@@ -13,7 +15,9 @@ router.get("/", async (req, res) => {
     const users = await Users.find();
     res.status(200).json(users);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching users", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error fetching users", error: error.message });
   }
 });
 
@@ -26,7 +30,9 @@ router.get("/:id", async (req, res) => {
     }
     res.status(200).json(user);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching user", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error fetching user", error: error.message });
   }
 });
 
@@ -42,7 +48,9 @@ router.get("/email/:email", async (req, res) => {
 
     res.status(200).json(user);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching user", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error fetching user", error: error.message });
   }
 });
 
@@ -71,25 +79,33 @@ router.put("/:id", async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.status(200).json({ message: "User updated successfully", user: updatedUser });
+    res
+      .status(200)
+      .json({ message: "User updated successfully", user: updatedUser });
   } catch (error) {
-    res.status(400).json({ message: "Error updating user", error: error.message });
+    res
+      .status(400)
+      .json({ message: "Error updating user", error: error.message });
   }
 });
 
 // Delete a user by ID
 router.delete("/:id", async (req, res) => {
   try {
-    if(!req.user.isAdmin){
-      return res.status(403).json({message: "You are not an admin."});
+    if (!req.user.isAdmin) {
+      return res.status(403).json({ message: "You are not an admin." });
     }
     const deletedUser = await Users.findByIdAndDelete(req.params.id);
     if (!deletedUser) {
       return res.status(404).json({ message: "User not found" });
     }
-    res.status(200).json({ message: "User deleted successfully", user: deletedUser });
+    res
+      .status(200)
+      .json({ message: "User deleted successfully", user: deletedUser });
   } catch (error) {
-    res.status(500).json({ message: "Error deleting user", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error deleting user", error: error.message });
   }
 });
 

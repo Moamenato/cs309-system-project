@@ -18,7 +18,9 @@ router.post("/", async (req, res) => {
     for (const item of items) {
       const foundItem = await Items.findById(item.item);
       if (!foundItem) {
-        return res.status(404).json({ message: `Item with ID ${item.item} not found` });
+        return res
+          .status(404)
+          .json({ message: `Item with ID ${item.item} not found` });
       }
 
       totalAmount += foundItem.price * item.quantity;
@@ -37,7 +39,9 @@ router.post("/", async (req, res) => {
       order: savedOrder,
     });
   } catch (error) {
-    res.status(400).json({ message: "Error creating order", error: error.message });
+    res
+      .status(400)
+      .json({ message: "Error creating order", error: error.message });
   }
 });
 
@@ -45,7 +49,9 @@ router.post("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const orderId = req.params.id;
-    const order = await Order.findById(orderId).populate("user", "name email").populate("items.item", "title price");
+    const order = await Order.findById(orderId)
+      .populate("user", "name email")
+      .populate("items.item", "title price");
 
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
@@ -53,7 +59,9 @@ router.get("/:id", async (req, res) => {
 
     res.status(200).json(order);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching order", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error fetching order", error: error.message });
   }
 });
 
@@ -61,7 +69,10 @@ router.get("/:id", async (req, res) => {
 router.get("/user/:userId", async (req, res) => {
   try {
     const userId = req.params.userId;
-    const orders = await Order.find({ user: userId }).populate("items.item", "title price");
+    const orders = await Order.find({ user: userId }).populate(
+      "items.item",
+      "title price"
+    );
 
     if (orders.length === 0) {
       return res.status(404).json({ message: "No orders found for this user" });
@@ -69,7 +80,9 @@ router.get("/user/:userId", async (req, res) => {
 
     res.status(200).json(orders);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching orders", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error fetching orders", error: error.message });
   }
 });
 
@@ -98,7 +111,9 @@ router.put("/:id", async (req, res) => {
       order: updatedOrder,
     });
   } catch (error) {
-    res.status(400).json({ message: "Error updating order", error: error.message });
+    res
+      .status(400)
+      .json({ message: "Error updating order", error: error.message });
   }
 });
 
@@ -116,7 +131,9 @@ router.delete("/:id", async (req, res) => {
       order: deletedOrder,
     });
   } catch (error) {
-    res.status(500).json({ message: "Error deleting order", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error deleting order", error: error.message });
   }
 });
 
