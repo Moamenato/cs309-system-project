@@ -82,7 +82,6 @@
   margin-bottom: 20px;
 }
 
-/* Styles for next and previous buttons */
 .swiper-button-next,
 .swiper-button-prev {
   background-color: #007bff;
@@ -117,7 +116,6 @@
   transform: translateY(10px);
 }
 
-/* Popup Notification */
 .popup-notification {
   position: fixed;
   bottom: 20px;
@@ -131,17 +129,18 @@
   animation: fade-in-out 2s;
 }
 
-/* Fade in-out animation for the popup */
 @keyframes fade-in-out {
   0% {
     opacity: 0;
     transform: translateY(20px);
   }
+
   20%,
   80% {
     opacity: 1;
     transform: translateY(0);
   }
+
   100% {
     opacity: 0;
     transform: translateY(20px);

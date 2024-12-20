@@ -1,124 +1,213 @@
-import React, { useState, useRef } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Autoplay } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-import "./ProductSwiper.css";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import {
+  Box,
+  Typography,
+  Button,
+  Card,
+  CardMedia,
+  CardContent,
+  CardActions,
+  createTheme,
+  ThemeProvider,
+  useMediaQuery,
+} from "@mui/material";
+
+const theme = createTheme({
+  palette: {
+    primary: { main: "#F4CE14" },
+    secondary: { main: "#495E57" },
+    info: { main: "#45474B" },
+    background: { default: "#F5F7F8" },
+  },
+  typography: {
+    fontFamily: "Arial, sans-serif",
+  },
+});
 
 const ProductSwiper = ({ products }) => {
-  const navigate = useNavigate();
   const [cart, setCart] = useState([]);
-  const [showPopup, setShowPopup] = useState(false);
-  const [popupMessage, setPopupMessage] = useState("");
-  const [filter, setFilter] = useState("all");
-  const swiperRef = useRef(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Add to Cart
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.down("md"));
+
+  const productsPerView = isMobile ? 1 : isTablet ? 2 : 4;
+
   const addToCart = (product) => {
     setCart((prevCart) => [...prevCart, product]);
-    setPopupMessage(`${product.name} added to the cart!`);
-    setShowPopup(true);
-
-    setTimeout(() => {
-      setShowPopup(false);
-    }, 2000);
   };
 
-  // Filter products
-  const filteredProducts =
-    filter === "all"
-      ? products
-      : products.filter((product) => product.category === filter);
-
-  // hover to stop auto swipe
-  const handleMouseEnter = () => {
-    if (swiperRef.current) {
-      swiperRef.current.swiper.autoplay.stop();
-    }
+  const handlePrev = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0
+        ? products.length - productsPerView
+        : prevIndex - productsPerView
+    );
   };
 
-  // Hover away and resume autoplay
-  const handleMouseLeave = () => {
-    if (swiperRef.current) {
-      swiperRef.current.swiper.autoplay.start();
-    }
+  const handleNext = () => {
+    setCurrentIndex(
+      (prevIndex) => (prevIndex + productsPerView) % products.length
+    );
   };
+
+  const visibleProducts = products
+    .slice(currentIndex, currentIndex + productsPerView)
+    .concat(
+      products.slice(
+        0,
+        Math.max(0, currentIndex + productsPerView - products.length)
+      )
+    );
 
   return (
-    <div className="product-swiper">
-      {/* Filter Section */}
-      <div className="filter-container">
-        <label htmlFor="filter">Filter by Category: </label>
-        <select
-          id="filter"
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-        >
-          <option value="all">Latest</option>
-          <option value="bundles">Bundles</option>
-          <option value="best">Best Sellers</option>
-          <option value="specials">Specials</option>
-          <option value="soon">Coming Soon</option>
-        </select>
-      </div>
-
-      {/* Swiper Section */}
-      <Swiper
-        modules={[Navigation, Pagination, Autoplay]}
-        navigation
-        pagination={{ clickable: true }}
-        autoplay={{ delay: 5000 }}
-        spaceBetween={20}
-        slidesPerView={4}
-        // slidesPerGroup={4}
-        breakpoints={{
-          320: { slidesPerView: 1 },
-          480: { slidesPerView: 2 },
-          768: { slidesPerView: 3 },
-          1024: { slidesPerView: 4 },
+    <ThemeProvider theme={theme}>
+      <Box
+        sx={{
+          backgroundColor: theme.palette.background.default,
+          p: 3,
+          borderRadius: 2,
         }}
-        loop={true}
-        watchOverflow={true}
-        ref={swiperRef}
       >
-        {filteredProducts.map((product, index) => (
-          <SwiperSlide key={index}>
-            <div
-              className="product-card"
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
+        {products.length > 0 ? (
+          <Box
+            sx={{
+              position: "relative",
+              display: "flex",
+              flexDirection: isMobile ? "column" : "row",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {/* Prev Button */}
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handlePrev}
+              sx={{
+                borderRadius: "50%",
+                minWidth: "40px",
+                height: "40px",
+                mb: isMobile ? 2 : 0,
+                mx: isMobile ? 0 : 2,
+              }}
             >
-              <img src={product.image} alt={product.name} />
-              <span>{product.category}</span>
-              <div className="product-info">
-                <h3>{product.name}</h3>
-                <p>{product.price}</p>
-                {/* Display the category */}
-              </div>
-              <button
-                className="add-to-cart"
-                onClick={() => addToCart(product)}
-              >
-                Add to Cart
-              </button>
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+              &lt;
+            </Button>
 
-      <button className="site-button" onClick={() => navigate("/products")}>
-        SEE ALL PRODUCTS
-      </button>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: isMobile ? "column" : "row",
+                gap: 2,
+                justifyContent: "center",
+                alignItems: "center",
+                overflow: "hidden",
+              }}
+            >
+              {visibleProducts.map((product, index) => (
+                <Card
+                  key={index}
+                  sx={{
+                    width: isMobile ? "100%" : 320,
+                    height: 400,
+                    display: "flex",
+                    flexDirection: "column",
+                    boxShadow: 3,
+                    backgroundColor: "white",
+                    borderRadius: 2,
+                    overflow: "hidden",
+                  }}
+                >
+                  <CardMedia
+                    component="img"
+                    height="200"
+                    image={
+                      product._id
+                        ? require(`../../images/${product._id}.jpg`)
+                        : ""
+                    }
+                    alt={product.title}
+                    sx={{
+                      objectFit: "cover",
+                    }}
+                  />
+                  <CardContent sx={{ flexGrow: 1 }}>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: theme.palette.info.main,
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      {product.tags.join(", ")}
+                    </Typography>
+                    <Typography
+                      variant="subtitle2"
+                      sx={{
+                        color: theme.palette.secondary.main,
+                        whiteSpace: "normal",
+                        wordWrap: "break-word",
+                        marginTop: 1,
+                        fontSize: "0.875rem",
+                      }}
+                    >
+                      {product.title.length > 15
+                        ? `${product.title.substring(0, 15)}...`
+                        : product.title}
+                    </Typography>
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        color: theme.palette.info.main,
+                        marginTop: 1,
+                      }}
+                    >
+                      ${product.price}
+                    </Typography>
+                  </CardContent>
+                  <CardActions>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      fullWidth
+                      onClick={() => addToCart(product)}
+                    >
+                      Add to Cart
+                    </Button>
+                  </CardActions>
+                </Card>
+              ))}
+            </Box>
 
-      {/* Popup Notification */}
-      {showPopup && (
-        <div className="popup-notification">
-          <p>{popupMessage}</p>
-        </div>
-      )}
-    </div>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleNext}
+              sx={{
+                borderRadius: "50%",
+                minWidth: "40px",
+                height: "40px",
+                mt: isMobile ? 2 : 0,
+                mx: isMobile ? 0 : 2,
+              }}
+            >
+              &gt;
+            </Button>
+          </Box>
+        ) : (
+          <Typography
+            variant="h6"
+            align="center"
+            sx={{ color: theme.palette.secondary.main }}
+          >
+            No products available.
+          </Typography>
+        )}
+      </Box>
+    </ThemeProvider>
   );
 };
 
