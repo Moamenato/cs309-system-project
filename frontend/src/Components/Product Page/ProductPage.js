@@ -18,7 +18,7 @@ import {
   DialogTitle,
 } from "@mui/material";
 import { Add, Remove } from "@mui/icons-material";
-import FeedbackReviews from "../FeedbackReviews/FeedbackReviews"; // Import FeedbackReviews
+import FeedbackReviews from "../FeedbackReviews/FeedbackReviews";
 
 const theme = createTheme({
   palette: {
@@ -52,7 +52,7 @@ function ProductPage() {
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
 
-  const userId = JSON.parse(localStorage.getItem("user"))._id;
+  const userId = JSON.parse(localStorage.getItem("user"))?._id; // Safe check for userId
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -67,12 +67,12 @@ function ProductPage() {
       }
     };
     fetchProduct();
-  }, [ProductID]);
+  }, [ProductID, apiUrl]);
 
-  const inStock = product.stock > 0;
+  const inStock = product?.stock > 0;
 
   const handleIncrease = () => {
-    if (quantity < product.stock) {
+    if (quantity < product?.stock) {
       setQuantity(quantity + 1);
     }
   };
@@ -101,7 +101,7 @@ function ProductPage() {
       const data = await response.json();
       console.log(data);
       if (response.ok) {
-        alert(`${quantity} ${product.title} added to cart!`);
+        alert(`${quantity} ${product?.title} added to cart!`);
       } else {
         console.error("Failed to add item to cart:", data);
         alert("Failed to add item to cart.");
@@ -131,8 +131,6 @@ function ProductPage() {
           comment: comment,
         }),
       });
-
-      const data = await response.json();
 
       if (response.ok) {
         setFeedbackMessage("Feedback submitted successfully.");
@@ -191,9 +189,9 @@ function ProductPage() {
           >
             <img
               src={
-                product._id ? require(`../../images/${product._id}.jpg`) : ""
+                product?._id ? require(`../../images/${product._id}.jpg`) : ""
               }
-              alt={product.title}
+              alt={product?.title || "Product image"}
               style={{
                 maxWidth: "100%",
                 maxHeight: "500px",
@@ -213,18 +211,18 @@ function ProductPage() {
                 marginBottom: 2,
               }}
             >
-              {product.title}
+              {product?.title}
             </Typography>
 
             <Typography
               variant="body1"
               sx={{ color: theme.palette.info.main, marginBottom: 3 }}
             >
-              {product.description}
+              {product?.description}
             </Typography>
 
             <Box sx={{ display: "flex", flexWrap: "wrap", marginBottom: 3 }}>
-              {product.tags &&
+              {product?.tags &&
                 product.tags.map((tag, index) => (
                   <Box
                     key={index}
@@ -254,7 +252,7 @@ function ProductPage() {
                 marginBottom: 2,
               }}
             >
-              Price: ${product.price}
+              Price: ${product?.price}
             </Typography>
 
             <Typography
@@ -282,7 +280,7 @@ function ProductPage() {
                 </Typography>
                 <IconButton
                   onClick={handleIncrease}
-                  disabled={quantity === product.stock}
+                  disabled={quantity === product?.stock}
                   sx={{ backgroundColor: "#f1f1f1", marginLeft: 1 }}
                 >
                   <Add />
