@@ -1,0 +1,181 @@
+/* Container for the entire item management section */
+.item-management-container {
+  padding: 2rem;
+  background-color: #f8f9fa;
+}
+
+/* Heading for the page */
+.item-management-container h2 {
+  text-align: center;
+  color: #343a40;
+  margin-bottom: 2rem;  /* Increased margin for better spacing */
+}
+
+/* Add Category and Add Item buttons */
+.add-category-btn, .add-item-btn {
+  display: inline-block;
+  margin: 1rem 0;  /* Adjusted margin for better spacing */
+  padding: 0.75rem 2rem;  /* Increased padding for a larger button */
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 8px;  /* Rounded corners for a modern look */
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s;  /* Smooth transition */
+  text-align: center;
+}
+
+.add-category-btn:hover, .add-item-btn:hover {
+  background-color: #218838;
+  transform: scale(1.05);  /* Slight scale effect on hover */
+}
+
+/* Search input styling */
+.search-input {
+  display: block;
+  margin: 1rem auto;
+  padding: 0.75rem;
+  width: 80%;
+  max-width: 600px;  /* Added max width for better responsiveness */
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  font-size: 1rem;
+  box-sizing: border-box;  /* Ensures padding doesn't affect width */
+}
+
+/* Flex container for displaying category boxes */
+.stats-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+/* Styling individual category boxes */
+.stat-box {
+  background-color: white;
+  padding: 1rem;
+  text-align: center;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  width: 200px;  /* Set fixed width */
+}
+
+.stat-box:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  transform: translateY(-5px);  /* Subtle lift effect on hover */
+}
+
+.stat-box.focused {
+  background-color: #007bff;
+  color: white;
+}
+
+/* Category and item list section */
+.category-list {
+  margin-top: 3rem;  /* Increased margin */
+}
+
+/* Styling each category container */
+.category-container {
+  padding: 1.5rem;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.item-list {
+  list-style: none;
+  padding: 0;
+}
+
+.item-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;  /* Vertically aligns text and buttons */
+  padding: 0.75rem;
+  border: 1px solid #dee2e6;
+  margin-bottom: 1rem;
+  border-radius: 8px;  /* Rounded corners for each item */
+  background-color: #fafafa;  /* Light background for each item */
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.item-list-item:hover {
+  background-color: #f1f1f1;
+  transform: scale(1.02);  /* Slight zoom effect on hover */
+}
+
+/* Edit and Delete buttons */
+.edit-btn, .delete-btn {
+  background-color: #007bff;
+  color: white;
+  padding: 0.5rem 1rem;
+  margin-left: 0.5rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.edit-btn:hover, .delete-btn:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);  /* Slight zoom effect on hover */
+}
+
+/* Item name, price, and stock text alignment */
+.item-list-item span {
+  flex: 1;
+  text-align: left;
+  font-size: 1rem;
+  font-weight: 500;  /* Added weight for better readability */
+}
+
+/* Form elements for adding category and item */
+form {
+  display: flex;
+  flex-direction: Row;
+  gap: 1rem;
+  margin-top: 2rem;
+  /* max-width: 600px; */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+form input {
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  box-sizing: border-box;
+    /* Ensures padding doesn't affect width */
+}
+
+form input[type="text"],
+form input[type="number"] {
+  width: 100%;
+  
+   /* Makes inputs take full width */
+}
+
+form button {
+  padding: 0.75rem 1.5rem;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+}
+
+form button:hover {
+  background-color: #218838;
+}
