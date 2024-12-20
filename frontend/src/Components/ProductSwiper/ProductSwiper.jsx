@@ -33,8 +33,40 @@ const ProductSwiper = ({ products }) => {
 
   const productsPerView = isMobile ? 1 : isTablet ? 2 : 4;
 
-  const addToCart = (product) => {
-    setCart((prevCart) => [...prevCart, product]);
+  const addToCart = async (product) => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const userId = user ? user._id : null; // Handle case where user might not be in localStorage
+
+    if (!userId) {
+      alert("Please log in to add items to the cart.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:8000/cart/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user: userId,
+          items: [{ item: product._id, quantity: 1 }],
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(`${product.title} added to cart!`);
+        setCart((prevCart) => [...prevCart, product]);
+      } else {
+        console.error("Failed to add item to cart:", data);
+        alert("Failed to add item to cart.");
+      }
+    } catch (error) {
+      console.error("Error adding item to cart:", error);
+      alert("An error occurred while adding the item to cart.");
+    }
   };
 
   const handlePrev = () => {
