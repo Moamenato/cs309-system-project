@@ -1,61 +1,112 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "./itemmangment.css";
 
 function ItemManagement() {
-  const [categories, setCategories] = useState([
-    {
-      id: 1,
-      name: "Category A",
-      items: [
-        { id: 1, name: "Item 1", price: 100, stock: 50 },
-        { id: 2, name: "Item 2", price: 150, stock: 30 },
-      ],
-    },
-    {
-      id: 2,
-      name: "Category B",
-      items: [
-        { id: 3, name: "Item 3", price: 200, stock: 20 },
-        { id: 4, name: "Item 4", price: 250, stock: 40 },
-      ],
-    },
-  ]);
-
+  const [categories, setCategories] = useState([]);
+  const [items, setItems] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [focusedCategoryId, setFocusedCategoryId] = useState(null);
 
-  const handleAddCategory = () => {
-    alert("Add Category functionality to be implemented");
+  const API_BASE_URL = "http://localhost:8000";
+  const AUTH_TOKEN = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NjMzOTdlNWUwNmRlYWNiZWFhNDA5NyIsImlhdCI6MTczNDYyODE5MSwiZXhwIjoxNzQyNDA0MTkxfQ.m05XyTM5DmaZsnZjKS40T2-RFW7mUwrtucCntDMSobo`;
+  const headers = { Authorization: AUTH_TOKEN };
+
+  useEffect(() => {
+    fetchCategories();
+    fetchItems();
+  }, []);
+
+  // Fetch categories from API
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/categories/`, { headers });
+      console.log("Categories fetched:", response.data);
+      setCategories(Array.isArray(response.data) ? response.data : []);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
   };
 
-  const handleEditCategory = (id) => {
-    alert(`Edit Category with ID: ${id}`);
+  // Fetch items from API
+  const fetchItems = async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/products/`, { headers });
+      console.log("Items fetched:", response.data);
+      setItems(Array.isArray(response.data) ? response.data : []);
+    } catch (error) {
+      console.error("Error fetching items:", error);
+    }
   };
 
-  const handleDeleteCategory = (id) => {
-    setCategories(categories.filter((category) => category.id !== id));
+  // Add new category
+  const handleAddCategory = async (name, description) => {
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}/categories/`,
+        { name, description },
+        { headers }
+      );
+      // setCategories((prevCategories) => [...prevCategories, response.data]);
+      fetchCategories();
+      alert("Category added successfully!");
+    } catch (error) {
+      console.error("Error adding category:", error);
+      alert("Failed to add category.");
+    }
   };
 
-  const handleDeleteItem = (categoryId, itemId) => {
-    setCategories(categories.map((category) =>
-      category.id === categoryId
-        ? { ...category, items: category.items.filter(item => item.id !== itemId) }
-        : category
-    ));
+  // Add new item
+  const handleAddItem = async (cId, title, description, price, stock) => {
+    try {
+      console.log(cId);
+      const requestBody = { title, cId,description, price, stock };
+      const response = await axios.post(`${API_BASE_URL}/products/`, requestBody, { headers });
+fetchItems();
+      alert("Item added successfully!");
+    } catch (error) {
+      console.error("Error adding item:", error);
+      alert("Failed to add item.");
+    }
+  };
+  const handleDeleteItem = async (item) => {
+    try {
+      alert(`Are you sure to delete Item: ${item.title}`);
+      await axios.delete(`${API_BASE_URL}/products/${item._id}`, { headers });
+      fetchItems();
+      alert("Item deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting item:", error);
+      alert("Failed to delete item.");
+    }
+  }
+
+  // Handle category click
+  const handleCategoryClick = (id) => {
+    setFocusedCategoryId(id === focusedCategoryId ? null : id);
   };
 
-  const filteredItems = (items) => {
-    return items.filter(item =>
-      item.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  };
+  // Filter items by search term
+  const filteredItems = (categoryId) =>{
+    console.log("categoryId",categoryId);
+    if(searchTerm){
+
+      return items.filter(
+         (item) =>
+           item.title?.toLowerCase().includes(searchTerm?.toLowerCase()) &&
+           (!categoryId || item.cId === categoryId)
+       );
+    }else{
+      const it=items.filter(item => item.cId === categoryId);
+      console.log("it",it);
+      return it;
+    }
+  }
 
   return (
     <div className="item-management-container">
       <h2>Item Management</h2>
-      <button className="add-category-btn" onClick={handleAddCategory}>
-        Add New Category
-      </button>
-      
+
       <input
         type="text"
         placeholder="Search Items"
@@ -63,59 +114,64 @@ function ItemManagement() {
         onChange={(e) => setSearchTerm(e.target.value)}
         className="search-input"
       />
-      
+
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          const name = e.target.name.value.trim();
+          const description = e.target.description.value.trim();
+          if (name) handleAddCategory(name, description);
+        }}
+      >
+        <h3>Add New Category</h3>
+        <input type="text" name="name" placeholder="Category Name" required />
+        <input type="text" name="description" placeholder="Category Description" />
+        <button type="submit" className="add-category-btn">Add Category</button>
+      </form>
+
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          const title = e.target.title.value.trim();
+          const description = e.target.description.value.trim();
+          const price = parseFloat(e.target.price.value);
+          const stock = parseInt(e.target.stock.value, 10);
+          const categoryId = e.target.category.value;
+
+          if (title && !isNaN(price) && !isNaN(stock) && categoryId) {
+            handleAddItem(categoryId, title, description, price, stock);
+          }
+        }}
+      >
+        <h3>Add New Item</h3>
+        <input type="text" name="title" placeholder="Item Title" required />
+        <select name="category" required>
+          <option value="" disabled selected>Select a Category</option>
+          {categories.map((category) => (
+            <option key={category._id} value={category._id}>{category.name}</option>
+          ))}
+        </select>
+        <input type="text" name="description" placeholder="Item Description" />
+        <input type="number" name="price" placeholder="Item Price" required />
+        <input type="number" name="stock" placeholder="Item Stock" required />
+        <button type="submit" className="add-item-btn">Add Item</button>
+      </form>
+
       <div className="category-list">
         {categories.map((category) => (
-          <div key={category.id} className="category-container">
-            <h3>{category.name}</h3>
-            <button
-              className="edit-category-btn"
-              onClick={() => handleEditCategory(category.id)}
-            >
-              Edit Category
-            </button>
-            <button
-              className="delete-category-btn"
-              onClick={() => handleDeleteCategory(category.id)}
-            >
-              Delete Category
-            </button>
-            
-            <table className="item-table">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Name</th>
-                  <th>Price</th>
-                  <th>Stock</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredItems(category.items).map((item) => (
-                  <tr key={item.id}>
-                    <td>{item.id}</td>
-                    <td>{item.name}</td>
-                    <td>${item.price}</td>
-                    <td>{item.stock}</td>
-                    <td>
-                      <button
-                        className="edit-btn"
-                        onClick={() => alert(`Edit Item with ID: ${item.id}`)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="delete-btn"
-                        onClick={() => handleDeleteItem(category.id, item.id)}
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div key={category._id} className="category-container">
+            <h3 onClick={() => handleCategoryClick(category._id)}>{category.name}</h3>
+            <ul className="item-list">
+              {filteredItems(category._id).map((item) => (
+                <li key={item._id} className="item-list-item">
+                  <span>{item.title}</span>
+                  <span>${item.price}</span>
+                  <span>{item.stock} in stock</span>
+                  <button className="edit-btn" onClick={() => alert(`Edit Item: ${item._id}`)}>Edit</button>
+                  <button className="delete-btn" onClick={()=>handleDeleteItem(item)}>Delete</button>
+                </li>
+              ))}
+            </ul>
           </div>
         ))}
       </div>

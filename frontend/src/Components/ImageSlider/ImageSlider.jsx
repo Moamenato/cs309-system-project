@@ -5,19 +5,16 @@ const ImageSlider = ({ images }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
-  // Next
   const nextSlide = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
   };
 
-  // Previous
   const prevSlide = () => {
     setCurrentIndex(
       (prevIndex) => (prevIndex - 1 + images.length) % images.length
     );
   };
 
-  // Automatic Slide
   useEffect(() => {
     const intervalId = setInterval(() => {
       if (!isHovered) {
@@ -28,7 +25,6 @@ const ImageSlider = ({ images }) => {
     return () => clearInterval(intervalId);
   }, [isHovered]);
 
-  // Handlers for hover events
   const handleMouseEnter = () => {
     setIsHovered(true);
   };

@@ -36,11 +36,6 @@ export default function Header() {
     navigate("/");
   };
 
-  const addItemToCart = (item) => {
-    setCartItems([...cartItems, item]);
-    setTotalPrice(totalPrice + item.price);
-  };
-
   return (
     <div className="header">
       <div className="container">

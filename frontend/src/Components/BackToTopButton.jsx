@@ -6,7 +6,6 @@ import { faChevronUp } from "@fortawesome/free-solid-svg-icons";
 const BackToTopButton = ({ scrollThreshold = 200 }) => {
   const [isVisible, setIsVisible] = useState(false);
 
-  // Show button when scrolling down
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > scrollThreshold) {
@@ -20,11 +19,10 @@ const BackToTopButton = ({ scrollThreshold = 200 }) => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [scrollThreshold]);
 
-  // Scroll back to top
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
-      behavior: "smooth", // Smooth scrolling effect
+      behavior: "smooth",
     });
   };
 

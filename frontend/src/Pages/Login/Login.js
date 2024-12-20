@@ -6,7 +6,6 @@ import {
   Typography,
   Alert,
   Container,
-  Grid,
   createTheme,
   ThemeProvider,
 } from "@mui/material";
@@ -102,41 +101,33 @@ const Login = () => {
               </Alert>
             </Box>
           )}
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
-            <Grid container columnSpacing={2} rowSpacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  id="email"
-                  label="Email"
-                  name="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  sx={textFieldStyles}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  id="password"
-                  label="Password"
-                  name="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  sx={textFieldStyles}
-                />
-              </Grid>
-            </Grid>
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3, width: "100%" }}>
+            <TextField
+              fullWidth
+              id="email"
+              label="Email"
+              name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              sx={{ ...textFieldStyles, mb: 2 }}
+            />
+            <TextField
+              fullWidth
+              id="password"
+              label="Password"
+              name="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              sx={{ ...textFieldStyles, mb: 3 }}
+            />
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{
-                mt: 3,
-                mb: 2,
                 backgroundColor: theme.palette.secondary.main,
                 color: theme.palette.background.default,
                 "&:hover": {

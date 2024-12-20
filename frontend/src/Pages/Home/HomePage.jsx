@@ -11,7 +11,6 @@ export default function HomePage() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    // Fetch the products from the API
     const fetchProducts = async () => {
       try {
         const response = await fetch("http://localhost:8000/products/");
@@ -24,7 +23,6 @@ export default function HomePage() {
 
     fetchProducts();
   }, []);
-  // Mock landing images, later will apply api
   const images = [image1, image2, image3];
 
   return (
