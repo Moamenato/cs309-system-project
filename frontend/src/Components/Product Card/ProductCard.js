@@ -36,8 +36,10 @@ const theme = createTheme({
 
 const ProductCard = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
-  const inStock = product.stock > 0;
-  const userId = JSON.parse(localStorage.getItem("user"))._id;
+  const inStock = product && product.stock > 0;
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userId = user ? user._id : null; // Handle case where user might not be in localStorage
+
   const handleIncrease = () => {
     if (quantity < product.stock) {
       setQuantity(quantity + 1);
@@ -53,6 +55,11 @@ const ProductCard = ({ product }) => {
   const handleAddToCart = async () => {
     if (!inStock) return;
 
+    if (!userId) {
+      alert("Please log in to add items to the cart.");
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost:8000/cart/", {
         method: "POST",
@@ -61,9 +68,7 @@ const ProductCard = ({ product }) => {
         },
         body: JSON.stringify({
           user: userId,
-          items: [
-            { item: product._id, quantity: quantity },
-          ],
+          items: [{ item: product._id, quantity: quantity }],
         }),
       });
 
@@ -80,6 +85,9 @@ const ProductCard = ({ product }) => {
       alert("An error occurred while adding the item to cart.");
     }
   };
+
+  // Fallback image if the product's image is missing
+  const productImage = require(`../../images/${product._id}.jpg`);
 
   return (
     <ThemeProvider theme={theme}>
@@ -104,8 +112,8 @@ const ProductCard = ({ product }) => {
           <CardMedia
             component="img"
             height="200"
-            image={product._id ? require(`../../images/${product._id}.jpg`) : ""}
-            alt={product.title}
+            image={productImage}
+            alt={product ? product.title : "Product Image"}
             sx={{
               objectFit: "contain",
               borderRadius: 4,
@@ -122,10 +130,13 @@ const ProductCard = ({ product }) => {
                 whiteSpace: "nowrap",
               }}
             >
-              {product.title}
+              {product ? product.title : "Product Name"}
             </Typography>
-            <Typography variant="body2" sx={{ color: theme.palette.primary.main }}>
-              {product.price}$
+            <Typography
+              variant="body2"
+              sx={{ color: theme.palette.primary.main }}
+            >
+              {product ? product.price : 0}$
             </Typography>
             <Typography
               variant="body2"
