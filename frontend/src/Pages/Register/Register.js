@@ -6,7 +6,6 @@ import {
   Typography,
   Alert,
   Container,
-  Grid,
   createTheme,
   ThemeProvider,
 } from "@mui/material";
@@ -67,16 +66,6 @@ const Register = () => {
     }
   };
 
-  const textFieldStyles = {
-    "& .MuiInputBase-input": { color: theme.palette.info.main },
-    "& .MuiInputLabel-root": { color: theme.palette.secondary.main },
-    "& .MuiOutlinedInput-root": {
-      "& fieldset": { borderColor: theme.palette.secondary.main },
-      "&:hover fieldset": { borderColor: theme.palette.primary.main },
-      "&.Mui-focused fieldset": { borderColor: theme.palette.primary.main },
-    },
-  };
-
   return (
     <ThemeProvider theme={theme}>
       <Container
@@ -93,17 +82,29 @@ const Register = () => {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          <Typography component="h1" variant="h5" gutterBottom color="primary">
+          <Typography
+            variant="h4"
+            component="h1"
+            sx={{
+              marginBottom: 2,
+              color: theme.palette.primary.main,
+              textAlign: "center",
+            }}
+          >
             Register
           </Typography>
+
           {message && (
             <Box mt={2}>
               <Alert
                 severity={message.includes("success") ? "success" : "error"}
                 sx={{
-                  backgroundColor: message.includes("success")
+                  backgroundColor: message.includes("Invalid email or password")
+                    ? theme.palette.primary.main
+                    : message.includes("success")
                     ? theme.palette.primary.main
                     : theme.palette.info.main,
                   color: theme.palette.background.default,
@@ -113,82 +114,90 @@ const Register = () => {
               </Alert>
             </Box>
           )}
+
           <Box
-            component="form"
-            onSubmit={handleSubmit}
-            sx={{ mt: 3, width: "100%" }}
+            sx={{
+              width: "100%",
+              maxWidth: 500,
+              padding: 3,
+              backgroundColor: "#FFFFFF",
+              borderRadius: 2,
+              boxShadow: 1,
+            }}
           >
-            <Grid container columnSpacing={2} rowSpacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  id="name"
-                  label="Name"
-                  name="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                  aria-label="Name"
-                  sx={textFieldStyles}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  id="email"
-                  label="Email"
-                  name="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  aria-label="Email"
-                  sx={textFieldStyles}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  id="password"
-                  label="Password"
-                  name="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  aria-label="Password"
-                  sx={textFieldStyles}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  id="phone"
-                  label="Phone (optional)"
-                  name="phone"
-                  value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                  aria-label="Phone"
-                  sx={textFieldStyles}
-                />
-              </Grid>
-            </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{
-                mt: 3,
-                mb: 2,
-                backgroundColor: theme.palette.secondary.main,
-                color: theme.palette.background.default,
-                "&:hover": {
-                  backgroundColor: theme.palette.primary.main,
-                  color: theme.palette.info.main,
-                },
-              }}
+            <Box
+              component="form"
+              onSubmit={handleSubmit}
+              sx={{ display: "flex", flexDirection: "column" }}
             >
-              Register
-            </Button>
+              <TextField
+                label="Name"
+                variant="outlined"
+                fullWidth
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                sx={{
+                  marginBottom: 2,
+                  backgroundColor: "#FFFFFF",
+                }}
+              />
+
+              <TextField
+                label="Email"
+                variant="outlined"
+                fullWidth
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                sx={{
+                  marginBottom: 2,
+                  backgroundColor: "#FFFFFF",
+                }}
+              />
+
+              <TextField
+                label="Password"
+                variant="outlined"
+                fullWidth
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                sx={{
+                  marginBottom: 2,
+                  backgroundColor: "#FFFFFF",
+                }}
+              />
+
+              <TextField
+                label="Phone (optional)"
+                variant="outlined"
+                fullWidth
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                sx={{
+                  marginBottom: 2,
+                  backgroundColor: "#FFFFFF",
+                }}
+              />
+
+              <Button
+                type="submit"
+                variant="contained"
+                fullWidth
+                sx={{
+                  color: "#FFFFFF",
+                  backgroundColor: theme.palette.secondary.main,
+                  "&:hover": {
+                    backgroundColor: theme.palette.primary.main,
+                  },
+                  mt: 2,
+                }}
+              >
+                Register
+              </Button>
+            </Box>
           </Box>
         </Box>
       </Container>

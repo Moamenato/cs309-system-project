@@ -1,27 +1,29 @@
-import React, { useState } from "react";
-import {
-  Box,
-  Button,
-  TextField,
-  Typography,
-  Alert,
-  Container,
-  createTheme,
-  ThemeProvider,
-} from "@mui/material";
+import { React, useState } from "react";
+import { TextField, Button, Box, Typography, Alert } from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 
 const theme = createTheme({
   palette: {
-    primary: { main: "#F4CE14" },
-    secondary: { main: "#495E57" },
-    info: { main: "#45474B" },
-    background: { default: "#F5F7F8" },
+    background: {
+      default: "#F5F7F8",
+    },
+    primary: {
+      main: "#F4CE14",
+    },
+    secondary: {
+      main: "#495E57",
+    },
+    text: {
+      primary: "#45474B",
+    },
   },
-  typography: { fontFamily: "Arial, sans-serif" },
+  typography: {
+    fontFamily: "Arial, sans-serif",
+  },
 });
 
-const Login = () => {
+const LoginPage = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -54,44 +56,50 @@ const Login = () => {
     }
   };
 
-  const textFieldStyles = {
-    "& .MuiInputBase-input": { color: theme.palette.info.main },
-    "& .MuiInputLabel-root": { color: theme.palette.secondary.main },
-    "& .MuiOutlinedInput-root": {
-      "& fieldset": { borderColor: theme.palette.secondary.main },
-      "&:hover fieldset": { borderColor: theme.palette.primary.main },
-      "&.Mui-focused fieldset": { borderColor: theme.palette.primary.main },
-    },
-  };
-
   return (
     <ThemeProvider theme={theme}>
-      <Container
-        maxWidth="sm"
+      <Box
         sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: "70vh",
+          maxHeight: "70vh",
           backgroundColor: theme.palette.background.default,
-          borderRadius: 3,
-          p: 4,
-          mt: 5,
+          padding: 2,
         }}
       >
-        <Box
+        <Typography
+          variant="h4"
+          component="h1"
           sx={{
-            marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+            marginBottom: 2,
+            color: theme.palette.primary.main,
+            textAlign: "center",
           }}
         >
-          <Typography component="h1" variant="h5" gutterBottom color="primary">
-            Login
-          </Typography>
+          Login
+        </Typography>
+
+        <Box
+          sx={{
+            width: "100%",
+            maxWidth: 500,
+            padding: 3,
+            backgroundColor: "#FFFFFF",
+            borderRadius: 2,
+            boxShadow: 1,
+          }}
+        >
           {message && (
             <Box mt={2}>
               <Alert
                 severity={message.includes("success") ? "success" : "error"}
                 sx={{
-                  backgroundColor: message.includes("success")
+                  backgroundColor: message.includes("Invalid email or password")
+                    ? theme.palette.primary.main
+                    : message.includes("success")
                     ? theme.palette.primary.main
                     : theme.palette.info.main,
                   color: theme.palette.background.default,
@@ -101,38 +109,48 @@ const Login = () => {
               </Alert>
             </Box>
           )}
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3, width: "100%" }}>
+
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            sx={{ display: "flex", flexDirection: "column" }}
+          >
             <TextField
-              fullWidth
-              id="email"
               label="Email"
-              name="email"
+              variant="outlined"
+              fullWidth
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              sx={{ ...textFieldStyles, mb: 2 }}
+              sx={{
+                marginBottom: 2,
+                backgroundColor: "#FFFFFF",
+              }}
             />
+
             <TextField
-              fullWidth
-              id="password"
               label="Password"
-              name="password"
               type="password"
+              variant="outlined"
+              fullWidth
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              sx={{ ...textFieldStyles, mb: 3 }}
+              sx={{
+                marginBottom: 2,
+                backgroundColor: "#FFFFFF",
+              }}
             />
+
             <Button
               type="submit"
-              fullWidth
               variant="contained"
+              fullWidth
               sx={{
+                color: "#FFFFFF",
                 backgroundColor: theme.palette.secondary.main,
-                color: theme.palette.background.default,
                 "&:hover": {
                   backgroundColor: theme.palette.primary.main,
-                  color: theme.palette.info.main,
                 },
               }}
             >
@@ -140,9 +158,9 @@ const Login = () => {
             </Button>
           </Box>
         </Box>
-      </Container>
+      </Box>
     </ThemeProvider>
   );
 };
 
-export default Login;
+export default LoginPage;
