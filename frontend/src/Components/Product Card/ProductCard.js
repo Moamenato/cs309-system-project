@@ -37,7 +37,7 @@ const theme = createTheme({
 const ProductCard = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
   const inStock = product.stock > 0;
-
+  const userId = JSON.parse(localStorage.getItem("user"))._id;
   const handleIncrease = () => {
     if (quantity < product.stock) {
       setQuantity(quantity + 1);
@@ -50,9 +50,34 @@ const ProductCard = ({ product }) => {
     }
   };
 
-  const handleAddToCart = () => {
-    if (inStock) {
-      alert(`${quantity} ${product.title} added to cart!`);
+  const handleAddToCart = async () => {
+    if (!inStock) return;
+
+    try {
+      const response = await fetch("http://localhost:8000/cart/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user: userId,
+          items: [
+            { item: product._id, quantity: quantity },
+          ],
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(`${quantity} ${product.title} added to cart!`);
+      } else {
+        console.error("Failed to add item to cart:", data);
+        alert("Failed to add item to cart.");
+      }
+    } catch (error) {
+      console.error("Error adding item to cart:", error);
+      alert("An error occurred while adding the item to cart.");
     }
   };
 
@@ -79,9 +104,7 @@ const ProductCard = ({ product }) => {
           <CardMedia
             component="img"
             height="200"
-            image={
-              product._id ? require(`../../images/${product._id}.jpg`) : ""
-            }
+            image={product._id ? require(`../../images/${product._id}.jpg`) : ""}
             alt={product.title}
             sx={{
               objectFit: "contain",
@@ -101,10 +124,7 @@ const ProductCard = ({ product }) => {
             >
               {product.title}
             </Typography>
-            <Typography
-              variant="body2"
-              sx={{ color: theme.palette.primary.main }}
-            >
+            <Typography variant="body2" sx={{ color: theme.palette.primary.main }}>
               {product.price}$
             </Typography>
             <Typography

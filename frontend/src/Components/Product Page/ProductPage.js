@@ -9,8 +9,16 @@ import {
   IconButton,
   CircularProgress,
   Grid,
+  TextField,
+  Rating,
+  Divider,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
 } from "@mui/material";
 import { Add, Remove } from "@mui/icons-material";
+import FeedbackReviews from "../FeedbackReviews/FeedbackReviews"; // Import FeedbackReviews
 
 const theme = createTheme({
   palette: {
@@ -39,6 +47,12 @@ function ProductPage() {
   const [product, setProduct] = useState({});
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
+  const [rating, setRating] = useState(null);
+  const [comment, setComment] = useState("");
+  const [feedbackMessage, setFeedbackMessage] = useState("");
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const userId = JSON.parse(localStorage.getItem("user"))._id;
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -69,10 +83,74 @@ function ProductPage() {
     }
   };
 
-  const handleAddToCart = () => {
-    if (inStock) {
-      alert(`${quantity} ${product.title} added to cart!`);
+  const handleAddToCart = async () => {
+    if (!inStock) return;
+
+    try {
+      const response = await fetch("http://localhost:8000/cart/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user: userId,
+          items: [{ item: ProductID, quantity: quantity }],
+        }),
+      });
+
+      const data = await response.json();
+      console.log(data);
+      if (response.ok) {
+        alert(`${quantity} ${product.title} added to cart!`);
+      } else {
+        console.error("Failed to add item to cart:", data);
+        alert("Failed to add item to cart.");
+      }
+    } catch (error) {
+      console.error("Error adding item to cart:", error);
+      alert("An error occurred while adding the item to cart.");
     }
+  };
+
+  const handleSubmitFeedback = async () => {
+    if (!rating || !comment) {
+      setFeedbackMessage("Please provide both a rating and a comment.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:8000/feedback/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          item: ProductID,
+          user: userId,
+          rating: rating,
+          comment: comment,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setFeedbackMessage("Feedback submitted successfully.");
+        setRating(null);
+        setComment("");
+        setOpenDialog(true);
+      } else {
+        setFeedbackMessage("Failed to submit feedback.");
+      }
+    } catch (error) {
+      console.error("Error submitting feedback:", error);
+      setFeedbackMessage("An error occurred while submitting feedback.");
+    }
+  };
+
+  const handleDialogClose = () => {
+    setOpenDialog(false);
+    window.location.reload();
   };
 
   if (loading) {
@@ -223,7 +301,85 @@ function ProductPage() {
             </Button>
           </Grid>
         </Grid>
+
+        <Divider sx={{ marginY: 4 }} />
+        <Grid item xs={12} sx={{ marginTop: 5 }}>
+          <Typography
+            variant="h4"
+            sx={{
+              fontWeight: "bold",
+              color: theme.palette.info.main,
+              marginBottom: 3,
+            }}
+          >
+            Leave Feedback
+          </Typography>
+
+          <Box sx={{ marginBottom: 3 }}>
+            <Rating
+              value={rating}
+              onChange={(event, newValue) => setRating(newValue)}
+              size="large"
+            />
+          </Box>
+
+          <TextField
+            label="Your Comment"
+            fullWidth
+            multiline
+            rows={4}
+            variant="outlined"
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            sx={{ marginBottom: 2 }}
+          />
+
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={handleSubmitFeedback}
+            sx={{ marginTop: 2 }}
+          >
+            Submit Feedback
+          </Button>
+
+          {feedbackMessage && (
+            <Typography variant="body1" sx={{ marginTop: 2, color: "#dc3545" }}>
+              {feedbackMessage}
+            </Typography>
+          )}
+        </Grid>
+
+        <Divider sx={{ marginY: 4 }} />
+
+        <Grid item xs={12} sx={{ marginTop: 5 }}>
+          <Typography
+            variant="h4"
+            sx={{
+              fontWeight: "bold",
+              color: theme.palette.info.main,
+              marginBottom: 3,
+            }}
+          >
+            Feedbacks
+          </Typography>
+          <FeedbackReviews />
+        </Grid>
       </Box>
+
+      <Dialog open={openDialog} onClose={handleDialogClose}>
+        <DialogTitle>Feedback Submission</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1">
+            Your feedback has been submitted successfully!
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogClose} color="primary">
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
     </ThemeProvider>
   );
 }
