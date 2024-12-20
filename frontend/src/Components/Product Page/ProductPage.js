@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import {
   createTheme,
   ThemeProvider,
@@ -41,6 +41,11 @@ const theme = createTheme({
 });
 
 function ProductPage() {
+  const location = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
+
   const { ProductID } = useParams();
   const apiUrl = `http://localhost:8000/products`;
 
@@ -51,6 +56,7 @@ function ProductPage() {
   const [comment, setComment] = useState("");
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [openDialog, setOpenDialog] = useState(false);
+  const [cartDialogOpen, setCartDialogOpen] = useState(false);
 
   const userId = JSON.parse(localStorage.getItem("user"))?._id; // Safe check for userId
 
@@ -101,10 +107,10 @@ function ProductPage() {
       const data = await response.json();
       console.log(data);
       if (response.ok) {
-        alert(`${quantity} ${product?.title} added to cart!`);
+        setCartDialogOpen(true);
       } else {
         console.error("Failed to add item to cart:", data);
-        alert("Failed to add item to cart.");
+        alert("You exceed amount of the stock.");
       }
     } catch (error) {
       console.error("Error adding item to cart:", error);
@@ -149,6 +155,10 @@ function ProductPage() {
   const handleDialogClose = () => {
     setOpenDialog(false);
     window.location.reload();
+  };
+
+  const handleCartDialogClose = () => {
+    setCartDialogOpen(false);
   };
 
   if (loading) {
@@ -374,6 +384,20 @@ function ProductPage() {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDialogClose} color="primary">
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={cartDialogOpen} onClose={handleCartDialogClose}>
+        <DialogTitle>Cart Update</DialogTitle>
+        <DialogContent>
+          <Typography variant="body1">
+            {quantity} {product?.title} added to cart successfully!
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCartDialogClose} color="primary">
             OK
           </Button>
         </DialogActions>

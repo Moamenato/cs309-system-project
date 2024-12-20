@@ -6,7 +6,7 @@
   height: 60px;
   border: none;
   border-radius: 12px;
-  background-color: #007bff;
+  background-color: #F4CE14;
   color: white;
   font-size: 24px;
   font-weight: bold;
@@ -27,7 +27,7 @@
 }
 
 .back-to-top-box:hover {
-  background-color: #0056b3;
+  background-color: #F4CE14;
   transform: scale(1.1);
 }
 

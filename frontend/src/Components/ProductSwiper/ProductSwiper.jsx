@@ -11,6 +11,7 @@ import {
   ThemeProvider,
   useMediaQuery,
 } from "@mui/material";
+import { Link } from "react-router-dom"; // Import Link for routing
 
 const theme = createTheme({
   palette: {
@@ -35,7 +36,7 @@ const ProductSwiper = ({ products }) => {
 
   const addToCart = async (product) => {
     const user = JSON.parse(localStorage.getItem("user"));
-    const userId = user ? user._id : null; // Handle case where user might not be in localStorage
+    const userId = user ? user._id : null;
 
     if (!userId) {
       alert("Please log in to add items to the cart.");
@@ -114,7 +115,7 @@ const ProductSwiper = ({ products }) => {
             {/* Prev Button */}
             <Button
               variant="contained"
-              color="primary"
+              color="secondary"
               onClick={handlePrev}
               sx={{
                 borderRadius: "50%",
@@ -151,59 +152,66 @@ const ProductSwiper = ({ products }) => {
                     overflow: "hidden",
                   }}
                 >
-                  <CardMedia
-                    component="img"
-                    height="200"
-                    image={
-                      product._id
-                        ? require(`../../images/${product._id}.jpg`)
-                        : ""
-                    }
-                    alt={product.title}
-                    sx={{
-                      objectFit: "cover",
-                    }}
-                  />
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography
-                      variant="body2"
+                  <Link
+                    to={`/products/${product._id}`} // Add the link here
+                    key={index}
+                    style={{ textDecoration: "none" }}
+                  >
+                    <CardMedia
+                      component="img"
+                      height="200"
+                      image={
+                        product._id
+                          ? require(`../../images/${product._id}.jpg`)
+                          : ""
+                      }
+                      alt={product.title}
                       sx={{
-                        color: theme.palette.info.main,
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
+                        objectFit: "cover",
                       }}
-                    >
-                      {product.tags.join(", ")}
-                    </Typography>
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        color: theme.palette.secondary.main,
-                        whiteSpace: "normal",
-                        wordWrap: "break-word",
-                        marginTop: 1,
-                        fontSize: "0.875rem",
-                      }}
-                    >
-                      {product.title.length > 15
-                        ? `${product.title.substring(0, 15)}...`
-                        : product.title}
-                    </Typography>
-                    <Typography
-                      variant="body1"
-                      sx={{
-                        color: theme.palette.info.main,
-                        marginTop: 1,
-                      }}
-                    >
-                      ${product.price}
-                    </Typography>
-                  </CardContent>
+                    />
+                    <CardContent sx={{ flexGrow: 1 }}>
+                      <Typography
+                        variant="subtitle2"
+                        sx={{
+                          color: theme.palette.secondary.main,
+                          whiteSpace: "normal",
+                          wordWrap: "break-word",
+                          marginTop: 1,
+                          fontSize: "0.9rem",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {product.title.length > 15
+                          ? `${product.title.substring(0, 15)}...`
+                          : product.title}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          color: theme.palette.info.main,
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                        }}
+                      >
+                        {product.tags.join(", ")}
+                      </Typography>
+                      <Typography
+                        variant="body1"
+                        sx={{
+                          color: theme.palette.info.main,
+                          marginTop: 1,
+                        }}
+                      >
+                        ${product.price}
+                      </Typography>
+                    </CardContent>
+                  </Link>
                   <CardActions>
                     <Button
                       variant="contained"
-                      color="secondary"
+                      color="primary"
                       fullWidth
                       onClick={() => addToCart(product)}
                     >
@@ -216,7 +224,7 @@ const ProductSwiper = ({ products }) => {
 
             <Button
               variant="contained"
-              color="primary"
+              color="secondary"
               onClick={handleNext}
               sx={{
                 borderRadius: "50%",

@@ -92,7 +92,7 @@ const Navbar = () => {
               <Link
                 to="/"
                 style={{
-                  color: theme.palette.secondary.main,
+                  color: "#F4CE14",
                   textDecoration: "none",
                 }}
               >

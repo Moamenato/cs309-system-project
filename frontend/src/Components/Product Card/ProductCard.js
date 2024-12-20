@@ -86,7 +86,6 @@ const ProductCard = ({ product }) => {
     }
   };
 
-  // Fallback image if the product's image is missing
   const productImage = require(`../../images/${product._id}.jpg`);
 
   return (
