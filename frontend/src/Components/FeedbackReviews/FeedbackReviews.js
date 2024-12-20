@@ -9,8 +9,17 @@ import {
   createTheme,
   ThemeProvider,
   Button,
-  useMediaQuery,
+  Rating,
 } from "@mui/material";
+
+const splitComment = (comment) => {
+  const maxLength = 100;
+  const lines = [];
+  for (let i = 0; i < comment.length; i += maxLength) {
+    lines.push(comment.slice(i, i + maxLength));
+  }
+  return lines;
+};
 
 const theme = createTheme({
   palette: {
@@ -96,14 +105,21 @@ const FeedbackReviews = () => {
           </Typography>
         ) : (
           <>
-            <Grid container spacing={2} justifyContent="center">
+            <Grid
+              container
+              spacing={2}
+              justifyContent="center"
+              sx={{ width: 1000 }}
+            >
               {feedbacks.slice(0, visibleReviews).map((feedback) => (
-                <Grid item xs={12} sm={6} md={4} key={feedback._id}>
+                <Grid item xs={12} key={feedback._id}>
                   <Card
                     sx={{
                       boxShadow: 3,
                       backgroundColor: "white",
                       borderRadius: 2,
+                      width: 1000,
+                      marginBottom: 2,
                     }}
                   >
                     <CardContent>
@@ -145,25 +161,29 @@ const FeedbackReviews = () => {
                           alignItems: "flex-start",
                         }}
                       >
-                        <Typography
-                          variant="body1"
+                        <Rating
+                          value={feedback.rating}
+                          readOnly
                           sx={{
                             color: theme.palette.primary.main,
-                            fontWeight: "bold",
                           }}
-                        >
-                          Rating: {feedback.rating} / 5
-                        </Typography>
-                        <Typography
-                          variant="body1"
-                          sx={{
-                            color: theme.palette.info.main,
-                            fontStyle: "italic",
-                            marginTop: 1,
-                          }}
-                        >
-                          "{feedback.comment}"
-                        </Typography>
+                        />
+                        {splitComment(feedback.comment).map((line, index) => (
+                          <Typography
+                            key={index}
+                            variant="body1"
+                            sx={{
+                              color: theme.palette.info.main,
+                              fontStyle: "italic",
+                              marginTop: 1,
+                              wordWrap: "break-word",
+                              whiteSpace: "normal",
+                              width: 1000,
+                            }}
+                          >
+                            "{line}"
+                          </Typography>
+                        ))}
                       </Box>
                     </CardContent>
                   </Card>
