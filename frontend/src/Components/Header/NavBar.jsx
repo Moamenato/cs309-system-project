@@ -48,7 +48,7 @@ const Navbar = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch("http://localhost:8000/relations");
+        const response = await fetch("https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/relations");
         const data = await response.json();
         if (Array.isArray(data)) {
           const categoryList = data

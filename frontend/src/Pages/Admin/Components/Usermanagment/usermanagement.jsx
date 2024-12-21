@@ -19,7 +19,7 @@ function UserManagement() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch("http://localhost:8000/users");
+        const response = await fetch("https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/users");
         if (!response.ok) {
           throw new Error("Failed to fetch users");
         }
@@ -36,7 +36,7 @@ function UserManagement() {
 
   const handleDelete = async (user) => {
     try {
-      const response = await fetch(`http://localhost:8000/users/${user._id}`, {
+      const response = await fetch(`https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/users/${user._id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

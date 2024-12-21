@@ -34,7 +34,7 @@ const ProductList = () => {
     const fetchProducts = async () => {
       try {
         const response = await fetch(
-          `http://localhost:8000/relations/${CategoryID}`
+          `https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/relations/${CategoryID}`
         );
 
         const data = await response.json();

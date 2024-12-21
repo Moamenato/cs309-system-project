@@ -61,7 +61,7 @@ const ProductCard = ({ product }) => {
     }
 
     try {
-      const response = await fetch("http://localhost:8000/cart/", {
+      const response = await fetch("https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/cart/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -86,7 +86,7 @@ const ProductCard = ({ product }) => {
     }
   };
 
-  const productImage = `http://localhost:8000/images/item/${product._id}`;
+  const productImage = `https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/images/item/${product._id}`;
 
   return (
     <ThemeProvider theme={theme}>

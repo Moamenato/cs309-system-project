@@ -12,7 +12,7 @@ const ImageUploadButton = ({ item }) => {
     formData.append("typeId", item._id);
 
     try {
-      const response = await fetch("http://localhost:8000/images", {
+      const response = await fetch("https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/images", {
         method: "POST",
         body: formData,
       });

@@ -13,7 +13,7 @@ export default function HomePage() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("http://localhost:8000/products/");
+        const response = await fetch("https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/products/");
         const data = await response.json();
         setProducts(data);
       } catch (error) {

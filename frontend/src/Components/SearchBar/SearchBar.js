@@ -25,7 +25,7 @@ const SearchBar = () => {
       setLoading(true);
       try {
         const response = await axios.post(
-          "http://localhost:8000/products/search/title",
+          "https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/products/search/title",
           { title: query }
         );
         setSearchResults(response.data);
@@ -106,7 +106,7 @@ const SearchBar = () => {
                 <img
                   src={
                     item._id
-                      ? `http://localhost:8000/images/item/${item._id}`
+                      ? `https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/images/item/${item._id}`
                       : ""
                   }
                   alt={item.title}

@@ -47,7 +47,7 @@ const UserPage = () => {
     //   console.log(`${key}: ${value}`);
     // });
     try {
-      const response = await fetch("http://localhost:8000/images", {
+      const response = await fetch("https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/images", {
         method: "POST",
         body: formData,
       });
@@ -58,7 +58,7 @@ const UserPage = () => {
 
       const data = await response.json();
       console.log(data);
-      setImagePreview("http://localhost:8000/images/user/" + user._id);
+      setImagePreview("https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/images/user/" + user._id);
       window.location.reload();
       localStorage.setItem(
         "user",
@@ -72,9 +72,9 @@ const UserPage = () => {
   useEffect(() => {
     if (user?.image) {
       // setImagePreview(user.image);
-      setImagePreview(`http://localhost:8000/images/user/${user._id}`);
+      setImagePreview(`https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/images/user/${user._id}`);
     } else if (user?._id) {
-      setImagePreview(`http://localhost:8000/images/user/${user._id}`);
+      setImagePreview(`https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/images/user/${user._id}`);
     }
   }, [user]);
 

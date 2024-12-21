@@ -47,7 +47,7 @@ function ProductPage() {
   }, [location]);
 
   const { ProductID } = useParams();
-  const apiUrl = `http://localhost:8000/products`;
+  const apiUrl = `https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/products`;
 
   const [product, setProduct] = useState({});
   const [loading, setLoading] = useState(true);
@@ -93,7 +93,7 @@ function ProductPage() {
     if (!inStock) return;
 
     try {
-      const response = await fetch("http://localhost:8000/cart/", {
+      const response = await fetch("https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/cart/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -125,7 +125,7 @@ function ProductPage() {
     }
 
     try {
-      const response = await fetch("http://localhost:8000/feedback/", {
+      const response = await fetch("https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/feedback/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -200,7 +200,7 @@ function ProductPage() {
             <img
               src={
                 product?._id
-                  ? `http://localhost:8000/images/item/${product._id}`
+                  ? `https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/images/item/${product._id}`
                   : ""
               }
               alt={product?.title || "Product image"}
