@@ -86,6 +86,17 @@ router.get("/user/:userId", async (req, res) => {
   }
 });
 
+router.get("/", async (req, res) => {
+  try {
+    const orders = await Order.find().populate("items.item", "title price");
+    res.status(200).json(orders);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error fetching orders", error: error.message });
+  }
+})
+
 // 4. Update order status by ID
 router.put("/:id", async (req, res) => {
   try {

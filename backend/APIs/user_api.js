@@ -92,9 +92,9 @@ router.put("/:id", async (req, res) => {
 // Delete a user by ID
 router.delete("/:id", async (req, res) => {
   try {
-    if (!req.user.isAdmin) {
-      return res.status(403).json({ message: "You are not an admin." });
-    }
+    // if (!req.user.isAdmin) {
+    //   return res.status(403).json({ message: "You are not an admin." });
+    // }
     const deletedUser = await Users.findByIdAndDelete(req.params.id);
     if (!deletedUser) {
       return res.status(404).json({ message: "User not found" });

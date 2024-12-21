@@ -5,9 +5,6 @@ const router = express.Router();
 // Create a new item
 router.post("/", async (req, res) => {
   try {
-    if(!req.user.isAdmin){
-      return res.status(403).json({message: "You are not an admin."});
-    }
     const existingItem = await Items.findOne({ title: req.body.title });
     if (existingItem) {
       return res
@@ -58,9 +55,6 @@ router.get("/:id", async (req, res) => {
 // Update an item by ID
 router.put("/:id", async (req, res) => {
   try {
-    if(!req.user.isAdmin){
-      return res.status(403).json({message: "You are not an admin."});
-    }
     const updatedItem = await Items.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
@@ -83,9 +77,6 @@ router.put("/:id", async (req, res) => {
 // Delete an item by ID
 router.delete("/:id", async (req, res) => {
   try {
-    if(!req.user.isAdmin){
-      return res.status(403).json({message: "You are not an admin."});
-    }
     const deletedItem = await Items.findByIdAndDelete(req.params.id);
     if (!deletedItem) {
       return res.status(404).json({ message: "Item not found" });

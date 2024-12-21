@@ -11,10 +11,13 @@ const feedbackRoutes = require("./APIs/feedback_api");
 const cartRoutes = require("./APIs/cart_api");
 const orderRoutes = require("./APIs/order_api");
 const authRoutes = require("./APIs/auth_api");
+const imageRoutes = require("./APIs/image_api");
+const fileUpload = require("express-fileupload");
 const dotenv = require("dotenv");
 dotenv.config({ path: "./config.env" });
 const app = express();
 app.use(cors());
+app.use(fileUpload());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -37,3 +40,4 @@ app.use("/feedback", feedbackRoutes);
 app.use("/cart", cartRoutes);
 app.use("/orders", orderRoutes);
 app.use("/auth", authRoutes.router);
+app.use("/images", imageRoutes);
