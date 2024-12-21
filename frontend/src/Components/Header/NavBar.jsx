@@ -50,10 +50,21 @@ const Navbar = () => {
       try {
         const response = await fetch("http://localhost:8000/relations");
         const data = await response.json();
-        const categoryList = data.map((relation) => relation.category);
-        setCategories(categoryList);
+        if (Array.isArray(data)) {
+          const categoryList = data
+            .filter(
+              (relation) =>
+                relation && relation.category && relation.category.name
+            )
+            .map((relation) => relation.category);
+          setCategories(categoryList);
+        } else {
+          console.error("Invalid data format received:", data);
+          setCategories([]);
+        }
       } catch (error) {
         console.error("Error fetching categories:", error);
+        setCategories([]);
       }
     };
 
@@ -141,21 +152,23 @@ const Navbar = () => {
                   onClose={handleMenuClose}
                   MenuListProps={{ "aria-labelledby": "categories-button" }}
                 >
-                  {categories.map((category) => (
-                    <MenuItem
-                      key={category._id}
-                      onClick={() => handleCategorySelect(category._id)}
-                      sx={{
-                        color: theme.palette.info.main,
-                        "&:hover": {
-                          backgroundColor: theme.palette.primary.main,
-                          color: theme.palette.background.default,
-                        },
-                      }}
-                    >
-                      {category.name}
-                    </MenuItem>
-                  ))}
+                  {categories
+                    .filter((category) => category && category.name)
+                    .map((category) => (
+                      <MenuItem
+                        key={category._id}
+                        onClick={() => handleCategorySelect(category._id)}
+                        sx={{
+                          color: theme.palette.info.main,
+                          "&:hover": {
+                            backgroundColor: theme.palette.primary.main,
+                            color: theme.palette.background.default,
+                          },
+                        }}
+                      >
+                        {category.name}
+                      </MenuItem>
+                    ))}
                 </Menu>
               </Hidden>
 
@@ -206,15 +219,17 @@ const Navbar = () => {
             <ListItem button onClick={handleMenuClick}>
               <ListItemText primary="Categories" />
             </ListItem>
-            {categories.map((category) => (
-              <ListItem
-                key={category._id}
-                button
-                onClick={() => handleCategorySelect(category._id)}
-              >
-                <ListItemText primary={category.name} />
-              </ListItem>
-            ))}
+            {categories
+              .filter((category) => category && category.name)
+              .map((category) => (
+                <ListItem
+                  key={category._id}
+                  button
+                  onClick={() => handleCategorySelect(category._id)}
+                >
+                  <ListItemText primary={category.name} />
+                </ListItem>
+              ))}
           </List>
         </Box>
       </Drawer>
