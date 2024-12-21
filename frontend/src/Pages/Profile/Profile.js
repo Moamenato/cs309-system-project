@@ -47,10 +47,13 @@ const UserPage = () => {
     //   console.log(`${key}: ${value}`);
     // });
     try {
-      const response = await fetch("https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/images", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        `${import.meta.env.REACT_APP_BASEURL}/images`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to upload image");
@@ -58,7 +61,9 @@ const UserPage = () => {
 
       const data = await response.json();
       console.log(data);
-      setImagePreview("https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/images/user/" + user._id);
+      setImagePreview(
+        `${import.meta.env.REACT_APP_BASEURL}/images/user/` + user._id
+      );
       window.location.reload();
       localStorage.setItem(
         "user",
@@ -72,9 +77,13 @@ const UserPage = () => {
   useEffect(() => {
     if (user?.image) {
       // setImagePreview(user.image);
-      setImagePreview(`https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/images/user/${user._id}`);
+      setImagePreview(
+        `${import.meta.env.REACT_APP_BASEURL}/images/user/${user._id}`
+      );
     } else if (user?._id) {
-      setImagePreview(`https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/images/user/${user._id}`);
+      setImagePreview(
+        `${import.meta.env.REACT_APP_BASEURL}/images/user/${user._id}`
+      );
     }
   }, [user]);
 

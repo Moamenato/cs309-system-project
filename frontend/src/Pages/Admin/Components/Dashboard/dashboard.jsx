@@ -17,7 +17,9 @@ function Dashboard() {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch("https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/categories");
+      const response = await fetch(
+        `${import.meta.env.REACT_APP_BASEURL}/categories`
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch categories");
       }
@@ -30,7 +32,9 @@ function Dashboard() {
   };
   const fetchItems = async () => {
     try {
-      const response = await fetch("https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/products");
+      const response = await fetch(
+        `${import.meta.env.REACT_APP_BASEURL}/products`
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch items");
       }
@@ -43,7 +47,9 @@ function Dashboard() {
   };
   const fetchUsers = async () => {
     try {
-      const response = await fetch("https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/users");
+      const response = await fetch(
+        `${import.meta.env.REACT_APP_BASEURL}/users`
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch users");
       }
@@ -56,7 +62,9 @@ function Dashboard() {
   };
   const fetchOrders = async () => {
     try {
-      const response = await fetch("https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/orders");
+      const response = await fetch(
+        `${import.meta.env.REACT_APP_BASEURL}/orders`
+      );
       if (!response.ok) {
         throw new Error("Failed to fetch orders");
       }
@@ -67,7 +75,7 @@ function Dashboard() {
       console.error(err);
     }
   };
-  
+
   const stats = [
     { title: "Total Users", value: users.length },
     { title: "Total Categories", value: categories.length },

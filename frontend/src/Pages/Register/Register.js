@@ -33,17 +33,20 @@ const Register = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/auth", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          email,
-          password,
-          phone_number: phoneNumber,
-          isAdmin: false,
-        }),
-      });
+      const response = await fetch(
+        `${import.meta.env.REACT_APP_BASEURL}/auth`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name,
+            email,
+            password,
+            phone_number: phoneNumber,
+            isAdmin: false,
+          }),
+        }
+      );
 
       const data = await response.json();
 

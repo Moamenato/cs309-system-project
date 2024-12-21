@@ -61,16 +61,19 @@ const ProductCard = ({ product }) => {
     }
 
     try {
-      const response = await fetch("https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/cart/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          user: userId,
-          items: [{ item: product._id, quantity: quantity }],
-        }),
-      });
+      const response = await fetch(
+        `${import.meta.env.REACT_APP_BASEURL}/cart/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user: userId,
+            items: [{ item: product._id, quantity: quantity }],
+          }),
+        }
+      );
 
       const data = await response.json();
 
@@ -86,7 +89,9 @@ const ProductCard = ({ product }) => {
     }
   };
 
-  const productImage = `https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/images/item/${product._id}`;
+  const productImage = `${import.meta.env.REACT_APP_BASEURL}/images/item/${
+    product._id
+  }`;
 
   return (
     <ThemeProvider theme={theme}>

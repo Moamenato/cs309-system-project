@@ -33,11 +33,14 @@ const LoginPage = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+      const response = await fetch(
+        `${import.meta.env.REACT_APP_BASEURL}/auth/login`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        }
+      );
 
       const data = await response.json();
 

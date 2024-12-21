@@ -44,7 +44,7 @@ const FeedbackReviews = () => {
     const fetchFeedbacks = async () => {
       try {
         const response = await fetch(
-          `https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/feedback/item/${ProductID}`
+          `${import.meta.env.REACT_APP_BASEURL}/feedback/item/${ProductID}`
         );
         const data = await response.json();
 

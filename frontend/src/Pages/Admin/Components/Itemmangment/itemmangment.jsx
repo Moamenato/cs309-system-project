@@ -13,7 +13,7 @@ function ItemManagement() {
   const [isEditPopupVisible, setEditPopupVisible] = useState(false);
   const [editItemData, setEditItemData] = useState(null);
 
-  const API_BASE_URL = "https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app";
+  const API_BASE_URL = `${import.meta.env.REACT_APP_BASEURL}`;
   const AUTH_TOKEN = `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...`; // Shortened for brevity
   const headers = { Authorization: AUTH_TOKEN };
 
@@ -133,7 +133,7 @@ function ItemManagement() {
           stock,
         }),
       });
-      
+
       if (!updateResponse.ok) {
         throw new Error(
           `Failed to update product. Status: ${updateResponse.status}`
@@ -221,10 +221,13 @@ function ItemManagement() {
     formData.append("typeId", itemId);
 
     try {
-      const response = await fetch("https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/images", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        `${import.meta.env.REACT_APP_BASEURL}/images`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to upload image");

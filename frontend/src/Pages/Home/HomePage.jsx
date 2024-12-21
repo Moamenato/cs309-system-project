@@ -13,7 +13,9 @@ export default function HomePage() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/products/");
+        const response = await fetch(
+          `${import.meta.env.REACT_APP_BASEURL}/products/`
+        );
         const data = await response.json();
         setProducts(data);
       } catch (error) {

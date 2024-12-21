@@ -52,7 +52,7 @@ function CartPage() {
 
     const fetchCart = async () => {
       try {
-        const response = await fetch(`https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/cart/${userId}`);
+        const response = await fetch(`${import.meta.env.REACT_APP_BASEURL}/cart/${userId}`);
         const data = await response.json();
 
         if (response.ok) {
@@ -72,7 +72,7 @@ function CartPage() {
   const deleteItem = async (cartItemId) => {
     try {
       const response = await fetch(
-        `https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/cart/${userId}/remove-item`,
+        `${import.meta.env.REACT_APP_BASEURL}/cart/${userId}/remove-item`,
         {
           method: "PATCH",
           headers: {
@@ -97,7 +97,7 @@ function CartPage() {
   const handleCheckout = async () => {
     try {
       const response = await fetch(
-        `https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/cart/checkout/${userId}`,
+        `${import.meta.env.REACT_APP_BASEURL}/cart/checkout/${userId}`,
         {
           method: "POST",
           headers: {
@@ -219,7 +219,7 @@ function CartPage() {
                     <TableCell>
                       <Box sx={{ display: "flex", alignItems: "center" }}>
                         <img
-                          src={`https://epic-hardware-test-os6r45i7v-moamenatos-projects.vercel.app/images/item/${cartItem.item._id}`}
+                          src={`${import.meta.env.REACT_APP_BASEURL}/images/item/${cartItem.item._id}`}
                           alt={cartItem.item.title}
                           style={{
                             width: 100,
