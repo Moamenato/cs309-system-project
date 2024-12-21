@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import "./App.css";
 
 // Website Pages
@@ -9,54 +9,64 @@ import Register from "./Pages/Register/Register";
 import CartPage from "./Components/Cart Page/CartPage.jsx";
 import ProfilePage from "./Pages/Profile/Profile";
 import ProductPage from "./Components/Product Page/ProductPage";
-import ContactUs from "./Pages/ContactUs";
-import Navbar from "./Components/Header/NavBar.jsx"; // Import Navbar
+import Navbar from "./Components/Header/NavBar.jsx";
 import Header from "./Components/Header/Header";
-import Products from "./Pages/Products";
-import ProductList from "./Components/Product List/ProductList"; // Import ProductList
+import Footer from "./Components/Footer/Footer.js";
+import ProductList from "./Components/Product List/ProductList";
 import { AdminHomePage } from "./Pages/Admin/adminhomepage";
 import Dashboard from "./Pages/Admin/Components/Dashboard/dashboard";
 import UserManagement from "./Pages/Admin/Components/Usermanagment/usermanagement";
 import ItemManagement from "./Pages/Admin/Components/Itemmangment/itemmangment";
 import AdminProfile from "./Pages/Admin/Components/profile/profile";
-import Footer from "./Components/Footer/Footer.js";
+import AdminHeader from "./Pages/Admin/Components/AdminHeader.jsx";
+
 function App() {
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  const storedUser = JSON.parse(localStorage.getItem("user"));
+  const isAdmin = storedUser ? storedUser.isAdmin : false;
 
-  // Function to handle category selection
   const handleCategorySelect = (categoryId) => {
     setSelectedCategoryId(categoryId);
   };
 
   return (
     <div className="app">
-      <div class="wrapper">
+      <div className="wrapper">
         <header>
           <Header />
-          <Navbar onCategorySelect={handleCategorySelect} />{" "}
+          {!isAdmin && <Navbar onCategorySelect={handleCategorySelect} />}
+          {isAdmin && <AdminHeader />}
         </header>
         <main>
-          {" "}
-          {/* Passing function to Navbar */}
           <Routes>
-            <Route path="/category/:CategoryID" element={<ProductList />} />
-            <Route path="/*" element={<HomePage />} />
-            <Route path="/admin" element={<AdminHomePage />} />
-            <Route path="/admin/Dashboard" element={<Dashboard />} />
-            <Route path="/admin/user-management" element={<UserManagement />} />
-            <Route path="/admin/item-management" element={<ItemManagement />} />
-            <Route path="/admin/settings" element={<AdminProfile />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/cart" element={<CartPage />} />
-            <Route path="/products" element={<Products />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/contact" element={<ContactUs />} />
-            <Route path="/products/:ProductID" element={<ProductPage />} />
+            {isAdmin ? (
+              <>
+                <Route path="/admin" element={<AdminHomePage />} />
+                <Route path="/admin/Dashboard" element={<Dashboard />} />
+                <Route
+                  path="/admin/user-management"
+                  element={<UserManagement />}
+                />
+                <Route
+                  path="/admin/item-management"
+                  element={<ItemManagement />}
+                />
+                <Route path="/admin/settings" element={<AdminProfile />} />
+              </>
+            ) : (
+              <>
+                <Route path="/category/:CategoryID" element={<ProductList />} />
+                <Route path="/*" element={<HomePage />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/cart" element={<CartPage />} />
+                <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/products/:ProductID" element={<ProductPage />} />
+              </>
+            )}
           </Routes>
         </main>
         <footer>
-          {" "}
           <Footer />
         </footer>
       </div>

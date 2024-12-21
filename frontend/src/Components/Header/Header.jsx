@@ -33,7 +33,8 @@ export default function Header() {
   const handleLogout = () => {
     localStorage.removeItem("user");
     setUser(null);
-    navigate("/");
+    navigate("/login");
+    window.location.reload();
   };
 
   return (

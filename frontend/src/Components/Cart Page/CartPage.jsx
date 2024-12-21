@@ -219,7 +219,7 @@ function CartPage() {
                     <TableCell>
                       <Box sx={{ display: "flex", alignItems: "center" }}>
                         <img
-                          src={require(`../../images/${cartItem.item._id}.jpg`)}
+                          src={`http://localhost:8000/images/item/${cartItem.item._id}`}
                           alt={cartItem.item.title}
                           style={{
                             width: 100,

@@ -32,23 +32,49 @@ const theme = createTheme({
 
 const UserPage = () => {
   const user = JSON.parse(localStorage.getItem("user"));
-  const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
 
-  const handleImageUpload = (e) => {
+  const handleImageUpload = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      setImage(file);
-      setImagePreview(URL.createObjectURL(file));
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("image", file);
+    formData.append("type", "user");
+    formData.append("typeId", user._id);
+    // console.log(formData);
+    // formData.forEach((value, key) => {
+    //   console.log(`${key}: ${value}`);
+    // });
+    try {
+      const response = await fetch("http://localhost:8000/images", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to upload image");
+      }
+
+      const data = await response.json();
+      console.log(data);
+      setImagePreview("http://localhost:8000/images/user/" + user._id);
+      window.location.reload();
+      localStorage.setItem(
+        "user",
+        JSON.stringify({ ...user, image: data.path })
+      );
+    } catch (error) {
+      console.error("Error uploading image:", error);
     }
   };
 
   useEffect(() => {
-    if (!user) {
-      return;
-    }
-    if (user.image) {
-      setImagePreview(user.image);
+    if (user?.image) {
+      // setImagePreview(user.image);
+      setImagePreview(`http://localhost:8000/images/user/${user._id}`);
+    } else if (user?._id) {
+      setImagePreview(`http://localhost:8000/images/user/${user._id}`);
     }
   }, [user]);
 

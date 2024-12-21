@@ -91,7 +91,7 @@ const Footer = () => {
         </Box>
 
         <Typography variant="body2" sx={{ marginBottom: 2 }}>
-          &copy; 2024 Your Company. All rights reserved.
+          &copy; 2024 Epic Hardware. All rights reserved.
         </Typography>
 
         <Box

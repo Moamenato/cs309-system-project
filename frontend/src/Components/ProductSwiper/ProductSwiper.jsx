@@ -162,7 +162,7 @@ const ProductSwiper = ({ products }) => {
                       height="200"
                       image={
                         product._id
-                          ? require(`../../images/${product._id}.jpg`)
+                          ? `http://localhost:8000/images/item/${product._id}`
                           : ""
                       }
                       alt={product.title}

@@ -139,7 +139,7 @@ const FeedbackReviews = () => {
                             marginRight: 2,
                           }}
                         >
-                          {feedback.user.name}
+                          {feedback.user? feedback.user.name :"deleted user"}
                         </Typography>
                         <Typography
                           variant="body2"

@@ -199,7 +199,9 @@ function ProductPage() {
           >
             <img
               src={
-                product?._id ? require(`../../images/${product._id}.jpg`) : ""
+                product?._id
+                  ? `http://localhost:8000/images/item/${product._id}`
+                  : ""
               }
               alt={product?.title || "Product image"}
               style={{

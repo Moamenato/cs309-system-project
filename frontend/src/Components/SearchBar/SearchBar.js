@@ -104,7 +104,11 @@ const SearchBar = () => {
                 }}
               >
                 <img
-                  src={item._id ? require(`../../images/${item._id}.jpg`) : ""}
+                  src={
+                    item._id
+                      ? `http://localhost:8000/images/item/${item._id}`
+                      : ""
+                  }
                   alt={item.title}
                   style={{
                     width: 40,

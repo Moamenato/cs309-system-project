@@ -86,7 +86,7 @@ const ProductCard = ({ product }) => {
     }
   };
 
-  const productImage = require(`../../images/${product._id}.jpg`);
+  const productImage = `http://localhost:8000/images/item/${product._id}`;
 
   return (
     <ThemeProvider theme={theme}>
@@ -111,7 +111,7 @@ const ProductCard = ({ product }) => {
           <CardMedia
             component="img"
             height="200"
-            image={productImage}
+            src={productImage}
             alt={product ? product.title : "Product Image"}
             sx={{
               objectFit: "contain",
