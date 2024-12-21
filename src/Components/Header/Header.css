@@ -1,0 +1,138 @@
+.header {
+  width: 100%;
+  background-color: #F5F7F8;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.header .container {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header .container .left {
+  width: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.header .container .left img {
+  display: block;
+  width: 100%;
+}
+
+.header .container .mid {
+  flex: 1;
+  margin: 0 40px;
+}
+
+.header .container .right {
+  width: 320px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header .container .icon {
+  font-size: 20px;
+  color: #495E57;
+  transition: 0.3s ease;
+}
+
+.header .container .right .auth {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 7px;
+}
+
+.auth-btn {
+  cursor: pointer;
+  display: flex;
+  flex-flow: column nowrap;
+  gap: 5px;
+}
+
+.auth-btn p {
+  color: #45474B;
+  font-size: 11px;
+  transition: 0.3s ease;
+}
+
+.right .button {
+  padding: 8px 16px;
+  background-color: #F4CE14;
+  color: #45474B;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 15px;
+  transition: 0.3s ease;
+}
+
+.cart {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 5px;
+}
+
+.cart p {
+  color: #495E57;
+  font-size: 14px;
+  transition: 0.3s ease;
+}
+
+.auth-btn:hover .button,
+.right .cart:hover .button {
+  background-color: #495E57;
+}
+
+.auth-btn:hover .icon,
+.right .cart:hover p {
+  color: #F4CE14;
+}
+
+.auth-btn:hover p {
+  color: black;
+}
+
+@media (max-width: 768px) {
+  .header {
+    height: 125px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
+  .container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .left,
+  .mid,
+  .right {
+    width: 100%;
+    justify-content: flex-start;
+    margin-bottom: 10px;
+  }
+
+  .mid {
+    max-width: 100%;
+  }
+
+  .right {
+    justify-content: flex-start;
+    margin-top: 10px;
+  }
+
+  .auth-btn {
+    font-size: 14px;
+  }
+
+  .cart p {
+    font-size: 14px;
+  }
+}
