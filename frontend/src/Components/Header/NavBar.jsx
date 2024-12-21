@@ -123,16 +123,6 @@ const Navbar = () => {
                 >
                   Home
                 </Button>
-                <Button
-                  component={Link}
-                  to="/about"
-                  sx={{
-                    color: theme.palette.secondary.main,
-                    "&:hover": { color: theme.palette.primary.main },
-                  }}
-                >
-                  About
-                </Button>
 
                 <Button
                   onClick={handleMenuClick}

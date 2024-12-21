@@ -55,10 +55,23 @@ function ItemManagement() {
   };
 
   const filteredProducts = (categoryId) => {
-    const category = relations.find(
-      (relation) => relation.category._id === categoryId
+    const relation = relations.find(
+      (relation) => relation.category && relation.category._id === categoryId
     );
-    return category ? category.items : [];
+
+    if (!relation) {
+      console.warn(`No relation found for category ID: ${categoryId}`);
+      return [];
+    }
+
+    if (!relation.items) {
+      console.warn(
+        `Relation found, but no items for category ID: ${categoryId}`
+      );
+      return [];
+    }
+
+    return relation.items;
   };
 
   const handleAddCategory = async (name, description) => {
@@ -237,15 +250,6 @@ function ItemManagement() {
   return (
     <div className="item-management-container">
       <h2>Item Management</h2>
-
-      <input
-        type="text"
-        placeholder="Search Items"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className="search-input"
-      />
-
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -325,6 +329,7 @@ function ItemManagement() {
                     Delete
                   </button>
                   <Button
+                    className="upload-btn"
                     variant="contained"
                     color="primary"
                     onClick={() => handleButtonClick(item._id)}

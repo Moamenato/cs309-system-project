@@ -21,7 +21,13 @@ router.post("/", async (req, res) => {
     if (existingUser) {
       return res.status(400).json({ message: "Email is already in use" });
     }
-
+    const emailRegex = /^[^\s@]+@[^\s@]+\.com$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ message: "Invalid email format. Email must end with '.com'." });
+    }
+    if(password.length<=7){
+      return res.status(400).json({ message: "Invalid password . password must be at least 8 characters long" });
+    }
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = new Users({ email, password: hashedPassword, ...rest });

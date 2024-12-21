@@ -30,17 +30,28 @@ const ImageUploadButton = ({ item }) => {
   };
 
   const handleButtonClick = () => {
-    fileInputRef.current.click(); // Simulate a click on the hidden file input
+    fileInputRef.current.click();
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    handleImageUpload(file); // Pass the selected file to the upload handler
+    handleImageUpload(file);
   };
 
   return (
     <div>
-      <button onClick={handleButtonClick} className="upload-button">
+      <button
+        onClick={handleButtonClick}
+        style={{
+          backgroundColor: "#F4CE14",
+          color: "#000",
+          padding: "5px 10px",
+          fontSize: "12px",
+          border: "none",
+          borderRadius: "5px",
+          cursor: "pointer",
+        }}
+      >
         Upload Image
       </button>
       <input
